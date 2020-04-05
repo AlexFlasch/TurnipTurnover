@@ -1,7 +1,7 @@
 import React from 'react';
 
 const HomePage = props => {
-  return <span>We're on the home page.</span>;
+  return <span>Home page things go here.</span>;
 };
 
 export default HomePage;

@@ -2,7 +2,8 @@ import React from 'react';
 import dotenv from 'dotenv';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import ApolloClient, { ApolloProvider } from 'apollo-boost';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from '@apollo/react-hooks';
 
 import AuthContext from './contexts/auth';
 import Routes from './routes';
