@@ -1,25 +1,38 @@
 import React from 'react';
+import dotenv from 'dotenv';
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import ApolloClient, { ApolloProvider } from 'apollo-boost';
+
 import AuthContext from './contexts/auth';
 import Routes from './routes';
 
+const env = dotenv.config();
+
+// firebase setup
 const firebaseConfig = {
-  apiKey: 'AIzaSyAKONkFzoT1YiViMTt6nCoJ_ggpo402_64',
-  authDomain: 'stalk-market-823eb.firebaseapp.com',
-  databaseURL: 'https://stalk-market-823eb.firebaseio.com',
-  projectId: 'stalk-market-823eb',
-  storageBucket: 'stalk-market-823eb.appspot.com',
-  messagingSenderId: '867737085488',
-  appId: '1:867737085488:web:5e7b63557298443b23aff5',
+  apiKey: env.apiKey,
+  authDomain: 'turnip-turnover.firebaseapp.com',
+  databaseURL: 'https://turnip-turnover.firebaseio.com',
+  projectId: 'turnip-turnover',
+  storageBucket: 'turnip-turnover.appspot.com',
+  messagingSenderId: '304344327651',
+  appId: '1:304344327651:web:3c52c93b563ed0b43dacd6',
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
+// apollo client setup
+const client = new ApolloClient({
+  uri: 'https://turnip-turnover.herokuapp.com/v1/graphql',
+});
+
 const App = () => {
   return (
     <AuthContext.Provider value={{ firebaseApp }}>
-      <Routes />
+      <ApolloProvider client={client}>
+        <Routes />
+      </ApolloProvider>
     </AuthContext.Provider>
   );
 };

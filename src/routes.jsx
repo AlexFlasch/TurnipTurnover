@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import AuthContext from './contexts/auth';
 
 import LoginPage from './pages/LoginPage';
@@ -11,7 +11,9 @@ const Routes = () => {
   return (
     <Router>
       <Switch>
-        <Route path="/">{isSignedIn ? <HomePage /> : <LoginPage />}</Route>
+        <Route path="/">
+          <HomePage />
+        </Route>
       </Switch>
     </Router>
   );
