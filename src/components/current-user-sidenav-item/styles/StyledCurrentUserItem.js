@@ -1,14 +1,25 @@
 import styled from 'styled-components';
 
-export default styled.li`
-  width: 100%;
+export default styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  width: 300px;
   height: 75px;
 
   opacity: 0.6;
 
-  a {
+  button {
     display: flex;
     align-content: center;
+
+    padding: 0;
+
+    border: none;
+    background: none;
+
+    cursor: pointer;
 
     height: 75px;
     width: 100%;

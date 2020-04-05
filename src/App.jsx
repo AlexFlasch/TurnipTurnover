@@ -4,6 +4,8 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
+import { ModalProvider } from 'styled-react-modal';
+import { motion } from 'framer-motion';
 
 import AuthContext from './contexts/auth';
 import Routes from './routes';
@@ -32,7 +34,9 @@ const App = () => {
   return (
     <AuthContext.Provider value={{ firebaseApp }}>
       <ApolloProvider client={client}>
-        <Routes />
+        <ModalProvider>
+          <Routes />
+        </ModalProvider>
       </ApolloProvider>
     </AuthContext.Provider>
   );

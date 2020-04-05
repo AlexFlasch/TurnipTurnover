@@ -1,7 +1,9 @@
 import React from 'react';
 
+import Input from '../../components/input/Input';
+
 const HomePage = props => {
-  return <span>Home page things go here.</span>;
+  return <Input label="test" />;
 };
 
 export default HomePage;
