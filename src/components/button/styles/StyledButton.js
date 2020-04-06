@@ -27,6 +27,12 @@ export const StyledButton = styled(motion.button)(props => {
     &:hover {
       color: ${colors.hoverColor};
     }
+
+    &.disabled,
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   `;
 });
 
@@ -34,6 +40,7 @@ export const StyledButtonBubble = styled(motion.div)(props => {
   const colors = getColorsForButtonType(props.type);
 
   return css`
+    pointer-events: none;
     position: absolute;
     top: -25%;
     left: -25%;

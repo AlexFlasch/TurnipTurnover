@@ -4,7 +4,6 @@ import palette from '../../../theme-palette';
 
 export default Modal.styled`
   width: 500px;
-  height: 50vh;
 
   padding: 15px;
 
@@ -18,5 +17,26 @@ export default Modal.styled`
     font-size: 1.25em;
     font-weight: bold;
     margin: 0;
+  }
+
+  .button-container {
+    text-align: center;
+  }
+
+  .modal-switch {
+    margin-top: 25px;
+    text-align: center;
+
+    button.link {
+      background: none;
+      border: 0;
+      color: ${palette.accentMint};
+      cursor: pointer;
+      font-size: inherit;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 `;

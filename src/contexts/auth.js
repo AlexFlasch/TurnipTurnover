@@ -7,6 +7,5 @@ const defaultContextValues = {
 };
 
 const authContext = createContext(defaultContextValues);
-// firebase util functions
 
 export { authContext as default };

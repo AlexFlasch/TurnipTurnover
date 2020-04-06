@@ -6,4 +6,6 @@ export default {
   accentGreen: 'rgba(78, 204, 163, 1)',
   uiLight: 'rgba(238, 238, 238, 1)',
   transparent: 'rgba(0, 0, 0, 0)',
+  warning: 'rgba(255, 217, 122, 1)',
+  error: 'rgba(255, 125, 122, 1)',
 };

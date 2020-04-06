@@ -1,5 +1,4 @@
 import React from 'react';
-import dotenv from 'dotenv';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import ApolloClient from 'apollo-boost';
@@ -9,11 +8,9 @@ import { ModalProvider } from 'styled-react-modal';
 import AuthContext from './contexts/auth';
 import Routes from './routes';
 
-const env = dotenv.config();
-
 // firebase setup
 const firebaseConfig = {
-  apiKey: env.apiKey,
+  apiKey: 'AIzaSyAhTjSuKjMw-f_SrO6INQaV45LJGjylgWw',
   authDomain: 'turnip-turnover.firebaseapp.com',
   databaseURL: 'https://turnip-turnover.firebaseio.com',
   projectId: 'turnip-turnover',
@@ -31,7 +28,7 @@ const client = new ApolloClient({
 
 const App = () => {
   return (
-    <AuthContext.Provider value={{ firebaseApp }}>
+    <AuthContext.Provider value={{ firebase: firebaseApp }}>
       <ApolloProvider client={client}>
         <ModalProvider>
           <Routes />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import palette from '../../theme-palette';
@@ -10,24 +10,56 @@ import StyledUnderline from './styles/StyledUnderline';
 
 const Input = props => {
   const [isActive, setIsActive] = useState(false);
+  const [hasValue, setHasValue] = useState(false);
+  const [isPristine, setIsPristine] = useState(true);
+
+  const [validationClass, setValidationClass] = useState('');
+  useEffect(() => {
+    if (typeof props.isValid !== 'boolean') {
+      setValidationClass('');
+    } else if (props.isValid) {
+      setValidationClass('valid');
+    } else {
+      setValidationClass('invalid');
+    }
+  }, [props.isValid]);
+
+  const [underlineVariant, setUnderlineVariant] = useState('inactive');
+  useEffect(() => {
+    if (!isPristine && validationClass === 'valid') {
+      setUnderlineVariant('valid');
+    } else if (!isPristine && validationClass === 'invalid') {
+      setUnderlineVariant('invalid');
+    } else {
+      setUnderlineVariant(isActive ? 'active' : 'inactive');
+    }
+  }, [isPristine, isActive, validationClass]);
 
   const labelVariants = {
     active: {
       y: '-3vh',
-      scale: 0.6,
+      fontSize: '1.5vh',
       opacity: 1,
     },
     inactive: {
       y: 0,
-      scale: 1,
+      fontSize: '3vh',
       opacity: 0.5,
     },
   };
 
   const underlineVariants = {
     active: {
-      height: 5,
+      height: 3,
       backgroundColor: palette.accentMint,
+    },
+    valid: {
+      height: 3,
+      backgroundColor: palette.accentLime,
+    },
+    invalid: {
+      height: 3,
+      backgroundColor: palette.error,
     },
     inactive: {
       height: 1,
@@ -40,34 +72,54 @@ const Input = props => {
       <StyledLabel
         variants={labelVariants}
         initial="inactive"
-        animate={isActive ? 'active' : 'inactive'}
+        animate={isActive || hasValue ? 'active' : 'inactive'}
       >
         {props.label}
       </StyledLabel>
       <StyledUnderline
+        className={validationClass}
         initial="inactive"
         variants={underlineVariants}
-        animate={isActive ? 'active' : 'inactive'}
+        animate={underlineVariant}
       />
       <StyledInput
+        className={validationClass}
         type={props.type}
-        className={{ active: isActive }}
-        onChange={event => props.onChange(event.target.value)}
+        onChange={event => {
+          if (isPristine) {
+            setIsPristine(false);
+          }
+          props.handleChange(event.target.value);
+          event.target.value.length > 0
+            ? setHasValue(true)
+            : setHasValue(false);
+        }}
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(false)}
+        autoComplete={props.autoComplete}
       />
+      {isPristine ? null : (
+        <span className={`validation-msg ${validationClass}`}>
+          {props.validationMessage}
+        </span>
+      )}
     </StyledInputWrapper>
   );
 };
 
 Input.propTypes = {
   label: PropTypes.string,
-  onChange: PropTypes.func,
+  handleChange: PropTypes.func,
   type: PropTypes.oneOf(['text', 'password']),
+  autoComplete: PropTypes.string,
+  validationMessage: PropTypes.string,
+  isValid: PropTypes.bool,
 };
 
 Input.defaultProps = {
   type: 'text',
+  autoComplete: undefined,
+  handleChange: () => {},
 };
 
 export default Input;
