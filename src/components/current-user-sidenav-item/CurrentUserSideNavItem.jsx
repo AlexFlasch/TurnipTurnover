@@ -11,7 +11,11 @@ const SideNavItem = props => {
 
   return (
     <StyledCurrentUserItem>
-      <SignInModal isOpen={isOpen} onBackgroundClick={() => setIsOpen(false)} />
+      <SignInModal
+        isOpen={isOpen}
+        onBackgroundClick={() => setIsOpen(false)}
+        handleCloseClick={() => setIsOpen(false)}
+      />
       <button onClick={() => setIsOpen(true)}>
         <StyledItemIcon className={`lnr ${props.icon}`}></StyledItemIcon>
         <span>{props.text}</span>

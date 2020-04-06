@@ -3,19 +3,18 @@ import PropTypes from 'prop-types';
 
 import AuthContext from '../../contexts/auth';
 
+import { isValidEmail, isValidPassword } from '../../utils/validation-fns';
+
 import Input from '../input/Input';
 import Button from '../button/Button';
 
-import { isValidEmail, isValidPassword } from '../../utils/validation-fns';
-
-const SignInForm = props => {
+const RegisterForm = props => {
   const { firebase } = useContext(AuthContext);
 
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
-  const [formIsValid, setFormIsValid] = useState(false);
+  const [confirmPasswordValue, setConfirmPasswordValue] = useState('');
 
-  // validate fields
   const [emailIsValid, setEmailIsValid] = useState(false);
   const [emailValidationMsg, setEmailValidationMsg] = useState('');
   useEffect(() => {
@@ -38,22 +37,38 @@ const SignInForm = props => {
     if (valid) {
       setPasswordValidationMsg('');
     } else {
-      setPasswordValidationMsg('Password must be at least 8 characters long.');
+      setPasswordValidationMsg('Password must be at least 8 characters.');
     }
   }, [passwordValue]);
 
-  // check to see if the entire form is valid
+  const [confirmPasswordIsValid, setConfirmPasswordIsValid] = useState(false);
+  const [
+    confirmPasswordValidationMsg,
+    setConfirmPasswordValidationMsg,
+  ] = useState('');
   useEffect(() => {
-    const valid = emailIsValid && passwordIsValid;
-    setFormIsValid(valid);
-  }, [emailIsValid, passwordIsValid]);
+    const valid = passwordValue === confirmPasswordValue;
+    setConfirmPasswordIsValid(valid);
 
-  const signInWithEmail = async () => {
+    if (valid) {
+      setConfirmPasswordValidationMsg('');
+    } else {
+      setConfirmPasswordValidationMsg('Passwords do not match.');
+    }
+  }, [passwordValue, confirmPasswordValue]);
+
+  const [formIsValid, setFormIsValid] = useState(false);
+  useEffect(() => {
+    const valid = emailIsValid && passwordIsValid && confirmPasswordIsValid;
+    setFormIsValid(valid);
+  }, [emailIsValid, passwordIsValid, confirmPasswordIsValid]);
+
+  const registerWithEmail = async () => {
     const user = await firebase
       .auth()
-      .signInWithEmailAndPassword(emailValue, passwordValue);
+      .createUserWithEmailAndPassword(emailValue, passwordValue);
 
-    console.log('signed in user: ', user);
+    console.log('registered user: ', user);
   };
 
   return (
@@ -62,9 +77,10 @@ const SignInForm = props => {
         className="modal-close-btn lnr lnr-cross"
         onClick={props.handleCloseClick}
       ></button>
-      <p className="title">Sign in</p>
-      <form onSubmit={formIsValid ? signInWithEmail : () => {}}>
+      <p className="title">Register</p>
+      <form onSubmit={formIsValid ? registerWithEmail : () => {}}>
         <Input
+          type="text"
           label="Email"
           handleChange={setEmailValue}
           autoComplete="email"
@@ -72,39 +88,47 @@ const SignInForm = props => {
           validationMessage={emailValidationMsg}
         />
         <Input
+          type="password"
           label="Password"
           handleChange={setPasswordValue}
-          type="password"
-          autoComplete="current-password"
+          autoComplete="new-password"
           isValid={passwordIsValid}
           validationMessage={passwordValidationMsg}
+        />
+        <Input
+          type="password"
+          label="Confirm Password"
+          handleChange={setConfirmPasswordValue}
+          autoComplete="confirm-password"
+          isValid={confirmPasswordIsValid}
+          validationMessage="Entered passwords do not match."
         />
       </form>
       <div className="button-container">
         <Button
           type="primary"
-          text="Sign In"
-          onClick={signInWithEmail}
+          text="Register"
+          onClick={registerWithEmail}
           disabled={!formIsValid}
         />
       </div>
       <div className="hr" />
       <p className="modal-switch">
-        Or if you'd like to create an account, you can
+        If you've already got an account, you can
         <button className="link" onClick={props.handleFormChange}>
-          register here.
+          sign in here.
         </button>
       </p>
     </>
   );
 };
 
-SignInForm.propTypes = {
+RegisterForm.propTypes = {
   handleFormChange: PropTypes.func,
 };
 
-SignInForm.defaultProps = {
+RegisterForm.defaultProps = {
   handleFormChange: () => {},
 };
 
-export default SignInForm;
+export default RegisterForm;

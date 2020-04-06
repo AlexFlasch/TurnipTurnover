@@ -10,6 +10,7 @@ export const StyledButton = styled(motion.button)(props => {
     position: relative;
     display: inline-block;
     cursor: pointer;
+    backface-visibility: hidden;
     padding: 10px 20px;
     margin: 10px;
     font-size: 2vh;
