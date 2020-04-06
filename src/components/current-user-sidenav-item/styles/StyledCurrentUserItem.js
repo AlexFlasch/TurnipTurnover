@@ -8,7 +8,7 @@ export default styled.div`
   width: 300px;
   height: 75px;
 
-  opacity: 0.6;
+  opacity: 0.8;
 
   button {
     display: flex;

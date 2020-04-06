@@ -12,4 +12,6 @@ export default styled(motion.label)`
   line-height: 5vh;
 
   color: ${palette.uiLight};
+
+  pointer-events: none;
 `;

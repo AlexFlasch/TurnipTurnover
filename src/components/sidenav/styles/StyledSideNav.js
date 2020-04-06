@@ -16,7 +16,7 @@ export default styled(motion.nav)`
     height: 100%;
     width: 100%;
     background-image: linear-gradient(-255deg, #a8ff78 0%, #78ffd6 100%);
-    opacity: 0.5;
+    opacity: 0.7;
   }
 
   display: flex;

@@ -8,4 +8,6 @@ export default styled(motion.div)`
 
   height: 1px;
   width: 100%;
+
+  pointer-events: none;
 `;

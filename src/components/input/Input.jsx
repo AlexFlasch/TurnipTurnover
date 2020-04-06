@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { motion } from 'framer-motion';
 
 import palette from '../../theme-palette';
 
@@ -28,7 +27,7 @@ const Input = props => {
   const underlineVariants = {
     active: {
       height: 5,
-      backgroundColor: palette.accentGreen,
+      backgroundColor: palette.accentMint,
     },
     inactive: {
       height: 1,
@@ -51,16 +50,11 @@ const Input = props => {
         animate={isActive ? 'active' : 'inactive'}
       />
       <StyledInput
+        type={props.type}
         className={{ active: isActive }}
         onChange={event => props.onChange(event.target.value)}
-        onFocus={() => {
-          console.log('input active!');
-          setIsActive(true);
-        }}
-        onBlur={() => {
-          console.log('input blurred.');
-          setIsActive(false);
-        }}
+        onFocus={() => setIsActive(true)}
+        onBlur={() => setIsActive(false)}
       />
     </StyledInputWrapper>
   );
@@ -69,6 +63,11 @@ const Input = props => {
 Input.propTypes = {
   label: PropTypes.string,
   onChange: PropTypes.func,
+  type: PropTypes.oneOf(['text', 'password']),
+};
+
+Input.defaultProps = {
+  type: 'text',
 };
 
 export default Input;

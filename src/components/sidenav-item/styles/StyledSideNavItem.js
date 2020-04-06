@@ -4,7 +4,7 @@ export default styled.li`
   width: 100%;
   height: 75px;
 
-  opacity: 0.6;
+  opacity: 0.8;
 
   a {
     display: flex;
