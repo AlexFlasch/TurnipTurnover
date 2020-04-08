@@ -13,6 +13,7 @@ const Input = props => {
   const [hasValue, setHasValue] = useState(false);
   const [isPristine, setIsPristine] = useState(true);
 
+  // change validation state for animations/styles based on the isValid prop
   const [validationClass, setValidationClass] = useState('');
   useEffect(() => {
     if (typeof props.isValid !== 'boolean') {
@@ -24,6 +25,7 @@ const Input = props => {
     }
   }, [props.isValid]);
 
+  // change underline animation state based on input state
   const [underlineVariant, setUnderlineVariant] = useState('inactive');
   useEffect(() => {
     if (!isPristine && validationClass === 'valid') {
@@ -35,6 +37,7 @@ const Input = props => {
     }
   }, [isPristine, isActive, validationClass]);
 
+  // animation properties
   const labelVariants = {
     active: {
       y: '-3vh',

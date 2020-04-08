@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 
+// contexts
 import AuthContext from '../../contexts/auth';
 
+// gql queries
+import useDisplayNameExists from '../../gql/subscriptions/displayNameExists';
+
+// helper functions
 import { isValidEmail, isValidPassword } from '../../utils/validation-fns';
 
+// components
 import Input from '../input/Input';
 import Button from '../button/Button';
 
@@ -12,9 +18,11 @@ const RegisterForm = props => {
   const { firebase } = useContext(AuthContext);
 
   const [emailValue, setEmailValue] = useState('');
+  const [displayNameValue, setDisplayNameValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [confirmPasswordValue, setConfirmPasswordValue] = useState('');
 
+  // validate fields
   const [emailIsValid, setEmailIsValid] = useState(false);
   const [emailValidationMsg, setEmailValidationMsg] = useState('');
   useEffect(() => {
@@ -27,6 +35,27 @@ const RegisterForm = props => {
       setEmailValidationMsg('Please provide a valid email.');
     }
   }, [emailValue]);
+
+  const {
+    data: displayNameData,
+    loading: displayNameLoading,
+  } = useDisplayNameExists({
+    variables: { displayName: displayNameValue },
+  });
+  const [displayNameIsValid, setDisplayNameIsValid] = useState(false);
+  const [displayNameValidationMsg, setDisplayNameValidationMsg] = useState('');
+  useEffect(() => {
+    if (!displayNameLoading) {
+      const exists = displayNameData.Users && displayNameData.Users.length > 0;
+      setDisplayNameIsValid(!exists);
+
+      if (exists) {
+        setDisplayNameValidationMsg('This display name is already taken.');
+      } else {
+        setDisplayNameValidationMsg('');
+      }
+    }
+  });
 
   const [passwordIsValid, setPasswordIsValid] = useState(false);
   const [passwordValidationMsg, setPasswordValidationMsg] = useState('');
@@ -57,6 +86,7 @@ const RegisterForm = props => {
     }
   }, [passwordValue, confirmPasswordValue]);
 
+  // check if entire form is valid
   const [formIsValid, setFormIsValid] = useState(false);
   useEffect(() => {
     const valid = emailIsValid && passwordIsValid && confirmPasswordIsValid;
@@ -76,7 +106,7 @@ const RegisterForm = props => {
       <button
         className="modal-close-btn lnr lnr-cross"
         onClick={props.handleCloseClick}
-      ></button>
+      />
       <p className="title">Register</p>
       <form onSubmit={formIsValid ? registerWithEmail : () => {}}>
         <Input
@@ -86,6 +116,14 @@ const RegisterForm = props => {
           autoComplete="email"
           isValid={emailIsValid}
           validationMessage={emailValidationMsg}
+        />
+        <Input
+          type="text"
+          label="Display Name"
+          handleChange={setDisplayNameValue}
+          autoComplete="display-name"
+          isValid={displayNameIsValid}
+          validationMessage={displayNameValidationMsg}
         />
         <Input
           type="password"
@@ -101,7 +139,7 @@ const RegisterForm = props => {
           handleChange={setConfirmPasswordValue}
           autoComplete="confirm-password"
           isValid={confirmPasswordIsValid}
-          validationMessage="Entered passwords do not match."
+          validationMessage={confirmPasswordValidationMsg}
         />
       </form>
       <div className="button-container">

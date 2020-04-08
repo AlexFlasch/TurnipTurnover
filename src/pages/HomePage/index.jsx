@@ -1,14 +1,16 @@
 import React from 'react';
+import DataGrid from 'react-data-grid';
 
 import Input from '../../components/input/Input';
 import Button from '../../components/button/Button';
 
 const HomePage = props => {
+  const columns = [];
+  const rows = [];
+
   return (
     <>
-      <Input label="test" />
-      <Button type="primary" text="test" />
-      <Button type="standard" text="test2" />
+      <DataGrid columns={columns} rows={rows}></DataGrid>
     </>
   );
 };

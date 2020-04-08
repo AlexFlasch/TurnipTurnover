@@ -1,10 +1,10 @@
 import React from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { ModalProvider } from 'styled-react-modal';
 
+import gqlClient from './apollo-setup';
 import AuthContext from './contexts/auth';
 import Routes from './routes';
 
@@ -21,15 +21,10 @@ const firebaseConfig = {
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
-// apollo client setup
-const client = new ApolloClient({
-  uri: 'https://turnip-turnover.herokuapp.com/v1/graphql',
-});
-
 const App = () => {
   return (
     <AuthContext.Provider value={{ firebase: firebaseApp }}>
-      <ApolloProvider client={client}>
+      <ApolloProvider client={gqlClient}>
         <ModalProvider>
           <Routes />
         </ModalProvider>

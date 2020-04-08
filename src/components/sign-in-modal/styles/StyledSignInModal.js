@@ -57,7 +57,6 @@ export default Modal.styled`
     flex-direction: column;
     justify-content: center;
     width: 500px;
-    height: 525px;
     padding: 25px;
     border-radius: 5px;
     color: ${palette.uiLight};
