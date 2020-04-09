@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import AuthContext from '../../contexts/auth';
 
 // gql queries
-import useDisplayNameExists from '../../gql/subscriptions/displayNameExists';
+import useDisplayNameExists from '../../gql/queries/displayNameExists';
 
 // helper functions
 import { isValidEmail, isValidPassword } from '../../utils/validation-fns';
@@ -36,26 +36,26 @@ const RegisterForm = props => {
     }
   }, [emailValue]);
 
-  const {
-    data: displayNameData,
-    loading: displayNameLoading,
-  } = useDisplayNameExists({
-    variables: { displayName: displayNameValue },
-  });
-  const [displayNameIsValid, setDisplayNameIsValid] = useState(false);
-  const [displayNameValidationMsg, setDisplayNameValidationMsg] = useState('');
-  useEffect(() => {
-    if (!displayNameLoading) {
-      const exists = displayNameData.Users && displayNameData.Users.length > 0;
-      setDisplayNameIsValid(!exists);
+  // const {
+  //   data: displayNameData,
+  //   loading: displayNameLoading,
+  // } = useDisplayNameExists({
+  //   variables: { displayName: displayNameValue },
+  // });
+  // const [displayNameIsValid, setDisplayNameIsValid] = useState(false);
+  // const [displayNameValidationMsg, setDisplayNameValidationMsg] = useState('');
+  // useEffect(() => {
+  //   if (!displayNameLoading) {
+  //     const exists = displayNameData.Users && displayNameData.Users.length > 0;
+  //     setDisplayNameIsValid(!exists);
 
-      if (exists) {
-        setDisplayNameValidationMsg('This display name is already taken.');
-      } else {
-        setDisplayNameValidationMsg('');
-      }
-    }
-  });
+  //     if (exists) {
+  //       setDisplayNameValidationMsg('This display name is already taken.');
+  //     } else {
+  //       setDisplayNameValidationMsg('');
+  //     }
+  //   }
+  // });
 
   const [passwordIsValid, setPasswordIsValid] = useState(false);
   const [passwordValidationMsg, setPasswordValidationMsg] = useState('');
@@ -122,8 +122,8 @@ const RegisterForm = props => {
           label="Display Name"
           handleChange={setDisplayNameValue}
           autoComplete="display-name"
-          isValid={displayNameIsValid}
-          validationMessage={displayNameValidationMsg}
+          // isValid={displayNameIsValid}
+          // validationMessage={displayNameValidationMsg}
         />
         <Input
           type="password"

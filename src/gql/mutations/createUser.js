@@ -1,6 +1,7 @@
 import gql from 'graphql-tag';
+import { useMutation } from '@apollo/react-hooks';
 
-export default gql`
+export const mutation = gql`
   mutation createUser($uuid: String!, $displayName: String!) {
     insert_Users(objects: { uuid: $uuid, displayName: $displayName }) {
       returning {
@@ -9,3 +10,5 @@ export default gql`
     }
   }
 `;
+
+export default queryVars => useMutation(mutation, { variables: queryVars });
