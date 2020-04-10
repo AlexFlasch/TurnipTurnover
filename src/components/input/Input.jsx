@@ -76,6 +76,7 @@ const Input = props => {
         variants={labelVariants}
         initial="inactive"
         animate={isActive || hasValue ? 'active' : 'inactive'}
+        transformTemplate={({ y }) => `translateY(${y})`}
       >
         {props.label}
       </StyledLabel>
