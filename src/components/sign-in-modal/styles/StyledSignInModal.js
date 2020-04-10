@@ -1,11 +1,26 @@
-import Modal from 'styled-react-modal';
+import styled from 'styled-components';
+import Modal, { BaseModalBackground } from 'styled-react-modal';
 
 import palette from '../../../theme-palette';
+
+export const modalBackdrop = styled(BaseModalBackground)`
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default Modal.styled`
   position: relative;
   width: 500px;
-  height: 500px;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   .title {
     text-align: center;
@@ -21,17 +36,17 @@ export default Modal.styled`
   .modal-switch {
     margin-top: 25px;
     text-align: center;
+  }
 
-    button.link {
-      background: none;
-      border: 0;
-      color: ${palette.accentMint};
-      cursor: pointer;
-      font-size: inherit;
+  button.link {
+    background: none;
+    border: 0;
+    color: ${palette.accentMint};
+    cursor: pointer;
+    font-size: inherit;
 
-      &:hover {
-        text-decoration: underline;
-      }
+    &:hover {
+      text-decoration: underline;
     }
   }
 
@@ -41,7 +56,7 @@ export default Modal.styled`
   }
 
   .hr {
-    margin: 20px 0;
+    margin: 25px 0;
     border: 0;
     min-height: 1px;
     height: 1px;
@@ -51,8 +66,6 @@ export default Modal.styled`
   .rotatable-form {
     box-sizing: border-box;
     position: absolute;
-    top: 0;
-    left: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -74,5 +87,23 @@ export default Modal.styled`
     border: 0;
     font-size: 2em;
     cursor: pointer;
+  }
+
+  .form-error {
+    text-align: center;
+  }
+
+  .form-error-msg {
+    color: ${palette.error};
+  }
+
+  .form-msg {
+    &.success {
+      color: ${palette.accentLime};
+    }
+
+    &.error {
+      color: ${palette.error};
+    }
   }
 `;

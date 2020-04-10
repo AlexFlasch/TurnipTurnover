@@ -9,7 +9,7 @@ import Button from '../button/Button';
 import { isValidEmail, isValidPassword } from '../../utils/validation-fns';
 
 const SignInForm = props => {
-  const { firebase } = useContext(AuthContext);
+  const { user, signInUser, resetPassword } = useContext(AuthContext);
 
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
@@ -48,20 +48,78 @@ const SignInForm = props => {
     setFormIsValid(valid);
   }, [emailIsValid, passwordIsValid]);
 
+  const [signInError, setSignInError] = useState(undefined);
   const signInWithEmail = async () => {
-    const user = await firebase
-      .auth()
-      .signInWithEmailAndPassword(emailValue, passwordValue);
+    const error = await signInUser(emailValue, passwordValue);
 
-    console.log('signed in user: ', user);
+    if (error) {
+      switch (error.code) {
+        case 'auth/wrong-password':
+          setSignInError('Incorrect password.');
+          break;
+
+        default:
+          setSignInError('Unknown error occurred. Please try again.');
+          console.log('firebase sign in error: ', error);
+          break;
+      }
+    } else {
+      setSignInError(undefined);
+      console.log('signed in user: ', user);
+    }
   };
+
+  const [resetEmailSentMsg, setResetEmailSentMsg] = useState({
+    msg: '',
+    status: '',
+  });
+  const tryResetPassword = async () => {
+    if (emailValue === '') {
+      setResetEmailSentMsg({
+        msg: 'Please enter an email to send the password reset link to.',
+        status: 'error',
+      });
+    } else {
+      const error = await resetPassword(emailValue);
+      if (error) {
+        switch (error.code) {
+          case 'auth/user-not-found':
+            setResetEmailSentMsg({
+              msg: 'No registered user associated with this email.',
+              status: 'error',
+            });
+            break;
+
+          default:
+            setResetEmailSentMsg({
+              msg:
+                'There was a problem while sending the reset password email. Please try again',
+              status: 'error',
+            });
+            console.log('reset password error: ', error);
+            break;
+        }
+      } else {
+        setResetEmailSentMsg({
+          msg: `Password reset email sent to ${emailValue}`,
+          status: 'success',
+        });
+      }
+    }
+  };
+
+  const signInErrorMsg = (
+    <div className="form-error">
+      <p className="form-error-msg">{signInError}</p>
+    </div>
+  );
 
   return (
     <>
       <button
         className="modal-close-btn lnr lnr-cross"
         onClick={props.handleCloseClick}
-      ></button>
+      />
       <p className="title">Sign in</p>
       <form onSubmit={formIsValid ? signInWithEmail : () => {}}>
         <Input
@@ -80,7 +138,19 @@ const SignInForm = props => {
           validationMessage={passwordValidationMsg}
         />
       </form>
+      {signInError ? signInErrorMsg : null}
       <div className="button-container">
+        <p className="center">
+          Did you forget your password?
+          <button onClick={tryResetPassword} className="link">
+            Send a password reset email.
+          </button>
+        </p>
+        {resetEmailSentMsg.msg !== '' ? (
+          <p className={`form-msg ${resetEmailSentMsg.status}`}>
+            {resetEmailSentMsg.msg}
+          </p>
+        ) : null}
         <Button
           type="primary"
           text="Sign In"

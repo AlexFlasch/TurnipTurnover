@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
+import { useLazyQuery } from '@apollo/react-hooks';
 
 // contexts
 import AuthContext from '../../contexts/auth';
 
 // gql queries
-import useDisplayNameExists from '../../gql/queries/displayNameExists';
+import { query } from '../../gql/queries/displayNameExists';
 
 // helper functions
 import { isValidEmail, isValidPassword } from '../../utils/validation-fns';
@@ -15,7 +16,7 @@ import Input from '../input/Input';
 import Button from '../button/Button';
 
 const RegisterForm = props => {
-  const { firebase } = useContext(AuthContext);
+  const { user, registerUser } = useContext(AuthContext);
 
   const [emailValue, setEmailValue] = useState('');
   const [displayNameValue, setDisplayNameValue] = useState('');
@@ -36,26 +37,30 @@ const RegisterForm = props => {
     }
   }, [emailValue]);
 
-  // const {
-  //   data: displayNameData,
-  //   loading: displayNameLoading,
-  // } = useDisplayNameExists({
-  //   variables: { displayName: displayNameValue },
-  // });
-  // const [displayNameIsValid, setDisplayNameIsValid] = useState(false);
-  // const [displayNameValidationMsg, setDisplayNameValidationMsg] = useState('');
-  // useEffect(() => {
-  //   if (!displayNameLoading) {
-  //     const exists = displayNameData.Users && displayNameData.Users.length > 0;
-  //     setDisplayNameIsValid(!exists);
+  const [
+    checkDisplayNameExists,
+    {
+      called: displayNameCalled,
+      data: displayNameData,
+      loading: displayNameLoading,
+    },
+  ] = useLazyQuery(query, {
+    variables: { displayName: displayNameValue },
+  });
+  const [displayNameIsValid, setDisplayNameIsValid] = useState(false);
+  const [displayNameValidationMsg, setDisplayNameValidationMsg] = useState('');
+  useEffect(() => {
+    if (displayNameCalled && !displayNameLoading) {
+      const exists = displayNameData.Users && displayNameData.Users.length > 0;
+      setDisplayNameIsValid(!exists);
 
-  //     if (exists) {
-  //       setDisplayNameValidationMsg('This display name is already taken.');
-  //     } else {
-  //       setDisplayNameValidationMsg('');
-  //     }
-  //   }
-  // });
+      if (exists) {
+        setDisplayNameValidationMsg('This display name is already taken.');
+      } else {
+        setDisplayNameValidationMsg('');
+      }
+    }
+  });
 
   const [passwordIsValid, setPasswordIsValid] = useState(false);
   const [passwordValidationMsg, setPasswordValidationMsg] = useState('');
@@ -93,13 +98,32 @@ const RegisterForm = props => {
     setFormIsValid(valid);
   }, [emailIsValid, passwordIsValid, confirmPasswordIsValid]);
 
+  const [registrationError, setRegistrationError] = useState(undefined);
   const registerWithEmail = async () => {
-    const user = await firebase
-      .auth()
-      .createUserWithEmailAndPassword(emailValue, passwordValue);
+    const error = await registerUser(emailValue, passwordValue);
+    if (error) {
+      console.log(error);
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          setRegistrationError('An account with this email already exists.');
+          break;
 
-    console.log('registered user: ', user);
+        default:
+          setRegistrationError('An unknown error occurred. Please try again.');
+          console.log('firebase auth error: ', error);
+          break;
+      }
+    } else {
+      setRegistrationError(undefined);
+      console.log('registered user: ', user);
+    }
   };
+
+  const formError = (
+    <div className="form-error">
+      <p className="center form-error-msg">{registrationError}</p>
+    </div>
+  );
 
   return (
     <>
@@ -120,10 +144,13 @@ const RegisterForm = props => {
         <Input
           type="text"
           label="Display Name"
-          handleChange={setDisplayNameValue}
+          handleChange={value => {
+            setDisplayNameValue(value);
+            checkDisplayNameExists();
+          }}
           autoComplete="display-name"
-          // isValid={displayNameIsValid}
-          // validationMessage={displayNameValidationMsg}
+          isValid={displayNameIsValid}
+          validationMessage={displayNameValidationMsg}
         />
         <Input
           type="password"
@@ -142,6 +169,7 @@ const RegisterForm = props => {
           validationMessage={confirmPasswordValidationMsg}
         />
       </form>
+      {registrationError !== undefined ? formError : null}
       <div className="button-container">
         <Button
           type="primary"

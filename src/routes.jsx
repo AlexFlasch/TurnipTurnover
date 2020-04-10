@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
+
 import AuthContext from './contexts/auth';
 
 import HomePage from './pages/HomePage';
