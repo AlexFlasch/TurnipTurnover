@@ -1,7 +1,7 @@
 import palette from '../../../theme-palette';
 
-export const getColorsForButtonType = type => {
-  switch (type) {
+export const getColorsForButtonType = color => {
+  switch (color) {
     case 'primary':
       return {
         bg: palette.transparent,

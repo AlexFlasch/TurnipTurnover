@@ -36,6 +36,7 @@ const SignInModal = props => {
         <SignInForm
           handleFormChange={() => setIsRegistering(true)}
           handleCloseClick={props.handleCloseClick}
+          closeModal={props.closeModal}
         />
       </motion.div>
       <motion.div
@@ -50,6 +51,7 @@ const SignInModal = props => {
             props.handleCloseClick();
             setIsRegistering(false);
           }}
+          closeModal={props.closeModal}
         />
       </motion.div>
     </StyledSignInModal>
@@ -59,10 +61,12 @@ const SignInModal = props => {
 SignInModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   handleCloseClick: PropTypes.func,
+  closeModal: PropTypes.func,
 };
 
 SignInModal.defaultProps = {
   handleCloseClick: () => {},
+  closeModal: () => {},
 };
 
 export default SignInModal;

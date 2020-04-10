@@ -8,4 +8,5 @@ export default {
   transparent: 'rgba(0, 0, 0, 0)',
   warning: 'rgba(255, 217, 122, 1)',
   error: 'rgba(255, 125, 122, 1)',
+  cardShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
 };

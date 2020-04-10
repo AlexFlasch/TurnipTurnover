@@ -74,7 +74,7 @@ export default Modal.styled`
     border-radius: 5px;
     color: ${palette.uiLight};
     background-color: ${palette.uiDark};
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    box-shadow: ${palette.cardShadow};
   }
 
   .modal-close-btn {

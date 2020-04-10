@@ -8,7 +8,7 @@ import { StyledButton, StyledButtonBubble } from './styles/StyledButton';
 const Button = props => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const buttonColors = getColorsForButtonType(props.type);
+  const buttonColors = getColorsForButtonType(props.color);
 
   const buttonVariants = {
     unhovered: {
@@ -34,6 +34,7 @@ const Button = props => {
     <StyledButton
       className={props.disabled ? 'disabled' : ''}
       type={props.type}
+      color={props.color}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       variants={buttonVariants}
@@ -45,7 +46,7 @@ const Button = props => {
     >
       <span>{props.text}</span>
       <StyledButtonBubble
-        type={props.type}
+        color={props.color}
         variants={bubbleVariants}
         initial="unhovered"
         animate={isHovered && !props.disabled ? 'hovered' : 'unhovered'}
@@ -56,14 +57,16 @@ const Button = props => {
 
 Button.propTypes = {
   text: PropTypes.string,
-  type: PropTypes.oneOf(['standard', 'primary']),
+  type: PropTypes.string,
+  color: PropTypes.oneOf(['standard', 'primary']),
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
   onDisabledClick: PropTypes.func,
 };
 
 Button.defaultProps = {
-  type: 'standard',
+  type: 'button',
+  color: 'standard',
   onClick: () => {},
   onDisabledClick: () => {},
   disabled: false,

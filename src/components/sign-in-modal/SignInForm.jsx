@@ -9,7 +9,7 @@ import Button from '../button/Button';
 import { isValidEmail, isValidPassword } from '../../utils/validation-fns';
 
 const SignInForm = props => {
-  const { user, signInUser, resetPassword } = useContext(AuthContext);
+  const { signInUser, resetPassword } = useContext(AuthContext);
 
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
@@ -49,23 +49,29 @@ const SignInForm = props => {
   }, [emailIsValid, passwordIsValid]);
 
   const [signInError, setSignInError] = useState(undefined);
-  const signInWithEmail = async () => {
-    const error = await signInUser(emailValue, passwordValue);
+  const signInWithEmail = async event => {
+    if (event) {
+      event.preventDefault();
+    }
 
-    if (error) {
-      switch (error.code) {
-        case 'auth/wrong-password':
-          setSignInError('Incorrect password.');
-          break;
+    if (formIsValid) {
+      const error = await signInUser(emailValue, passwordValue);
 
-        default:
-          setSignInError('Unknown error occurred. Please try again.');
-          console.log('firebase sign in error: ', error);
-          break;
+      if (error) {
+        switch (error.code) {
+          case 'auth/wrong-password':
+            setSignInError('Incorrect password.');
+            break;
+
+          default:
+            setSignInError('Unknown error occurred. Please try again.');
+            console.log('firebase sign in error: ', error);
+            break;
+        }
+      } else {
+        setSignInError(undefined);
+        props.closeModal();
       }
-    } else {
-      setSignInError(undefined);
-      console.log('signed in user: ', user);
     }
   };
 
@@ -121,7 +127,7 @@ const SignInForm = props => {
         onClick={props.handleCloseClick}
       />
       <p className="title">Sign in</p>
-      <form onSubmit={formIsValid ? signInWithEmail : () => {}}>
+      <form onSubmit={e => signInWithEmail(e)}>
         <Input
           label="Email"
           handleChange={setEmailValue}
@@ -137,27 +143,28 @@ const SignInForm = props => {
           isValid={passwordIsValid}
           validationMessage={passwordValidationMsg}
         />
-      </form>
-      {signInError ? signInErrorMsg : null}
-      <div className="button-container">
-        <p className="center">
-          Did you forget your password?
-          <button onClick={tryResetPassword} className="link">
-            Send a password reset email.
-          </button>
-        </p>
-        {resetEmailSentMsg.msg !== '' ? (
-          <p className={`form-msg ${resetEmailSentMsg.status}`}>
-            {resetEmailSentMsg.msg}
+        {signInError ? signInErrorMsg : null}
+        <div className="button-container">
+          <p className="center">
+            Did you forget your password?
+            <button type="button" onClick={tryResetPassword} className="link">
+              Send a password reset email.
+            </button>
           </p>
-        ) : null}
-        <Button
-          type="primary"
-          text="Sign In"
-          onClick={signInWithEmail}
-          disabled={!formIsValid}
-        />
-      </div>
+          {resetEmailSentMsg.msg !== '' ? (
+            <p className={`form-msg ${resetEmailSentMsg.status}`}>
+              {resetEmailSentMsg.msg}
+            </p>
+          ) : null}
+          <Button
+            type="submit"
+            color="primary"
+            text="Sign In"
+            onClick={e => signInWithEmail(e)}
+            disabled={!formIsValid}
+          />
+        </div>
+      </form>
       <div className="hr" />
       <p className="modal-switch">
         Or if you'd like to create an account, you can
@@ -171,10 +178,12 @@ const SignInForm = props => {
 
 SignInForm.propTypes = {
   handleFormChange: PropTypes.func,
+  closeModal: PropTypes.func,
 };
 
 SignInForm.defaultProps = {
   handleFormChange: () => {},
+  closeModal: () => {},
 };
 
 export default SignInForm;

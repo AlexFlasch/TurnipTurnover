@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 
 // contexts
 import AuthContext from '../../contexts/auth';
 
 // gql queries
-import { query } from '../../gql/queries/displayNameExists';
+import { query as displayNameQuery } from '../../gql/queries/displayNameExists';
+import { mutation as createUserMutation } from '../../gql/mutations/createUser';
 
 // helper functions
 import { isValidEmail, isValidPassword } from '../../utils/validation-fns';
@@ -44,14 +45,14 @@ const RegisterForm = props => {
       data: displayNameData,
       loading: displayNameLoading,
     },
-  ] = useLazyQuery(query, {
+  ] = useLazyQuery(displayNameQuery, {
     variables: { displayName: displayNameValue },
   });
   const [displayNameIsValid, setDisplayNameIsValid] = useState(false);
   const [displayNameValidationMsg, setDisplayNameValidationMsg] = useState('');
   useEffect(() => {
     if (displayNameCalled && !displayNameLoading) {
-      const exists = displayNameData.Users && displayNameData.Users.length > 0;
+      const exists = displayNameData.User && displayNameData.User.length > 0;
       setDisplayNameIsValid(!exists);
 
       if (exists) {
@@ -60,7 +61,12 @@ const RegisterForm = props => {
         setDisplayNameValidationMsg('');
       }
     }
-  });
+  }, [
+    displayNameValue,
+    displayNameCalled,
+    displayNameData,
+    displayNameLoading,
+  ]);
 
   const [passwordIsValid, setPasswordIsValid] = useState(false);
   const [passwordValidationMsg, setPasswordValidationMsg] = useState('');
@@ -98,26 +104,65 @@ const RegisterForm = props => {
     setFormIsValid(valid);
   }, [emailIsValid, passwordIsValid, confirmPasswordIsValid]);
 
+  const [createUser, { called: createUserCalled }] = useMutation(
+    createUserMutation,
+    {
+      onCompleted: props.closeModal,
+    },
+  );
+  const [registrationSuccessful, setRegistrationSuccessful] = useState(false);
   const [registrationError, setRegistrationError] = useState(undefined);
-  const registerWithEmail = async () => {
-    const error = await registerUser(emailValue, passwordValue);
-    if (error) {
-      console.log(error);
-      switch (error.code) {
-        case 'auth/email-already-in-use':
-          setRegistrationError('An account with this email already exists.');
-          break;
+  const registerWithEmail = async event => {
+    if (event) {
+      event.preventDefault();
+    }
 
-        default:
-          setRegistrationError('An unknown error occurred. Please try again.');
-          console.log('firebase auth error: ', error);
-          break;
+    if (formIsValid) {
+      const error = await registerUser(
+        emailValue,
+        displayNameValue,
+        passwordValue,
+      );
+      if (error) {
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            setRegistrationError('An account with this email already exists.');
+            break;
+
+          default:
+            setRegistrationError(
+              'An unknown error occurred. Please try again.',
+            );
+            console.log('firebase auth error: ', error);
+            break;
+        }
+      } else {
+        setRegistrationError(undefined);
+        setRegistrationSuccessful(true);
       }
-    } else {
-      setRegistrationError(undefined);
-      console.log('registered user: ', user);
     }
   };
+
+  // this useEffect ensures the user is created in the Hasura DB once firebase has returned
+  // the user that was created during registration
+  useEffect(() => {
+    if (!createUserCalled && registrationSuccessful && user && user.uid) {
+      console.log('attempting to create user with: ', {
+        uuid: user.uid,
+        displayName: displayNameValue,
+      });
+      createUser({
+        variables: { uuid: user.uid, displayName: displayNameValue },
+      });
+    }
+  }, [
+    registrationSuccessful,
+    user,
+    props.closeModal,
+    createUser,
+    createUserCalled,
+    displayNameValue,
+  ]);
 
   const formError = (
     <div className="form-error">
@@ -132,7 +177,7 @@ const RegisterForm = props => {
         onClick={props.handleCloseClick}
       />
       <p className="title">Register</p>
-      <form onSubmit={formIsValid ? registerWithEmail : () => {}}>
+      <form onSubmit={registerWithEmail}>
         <Input
           type="text"
           label="Email"
@@ -168,16 +213,17 @@ const RegisterForm = props => {
           isValid={confirmPasswordIsValid}
           validationMessage={confirmPasswordValidationMsg}
         />
+        {registrationError !== undefined ? formError : null}
+        <div className="button-container">
+          <Button
+            type="submit"
+            color="primary"
+            text="Register"
+            onClick={registerWithEmail}
+            disabled={!formIsValid}
+          />
+        </div>
       </form>
-      {registrationError !== undefined ? formError : null}
-      <div className="button-container">
-        <Button
-          type="primary"
-          text="Register"
-          onClick={registerWithEmail}
-          disabled={!formIsValid}
-        />
-      </div>
       <div className="hr" />
       <p className="modal-switch">
         If you've already got an account, you can
@@ -191,10 +237,12 @@ const RegisterForm = props => {
 
 RegisterForm.propTypes = {
   handleFormChange: PropTypes.func,
+  closeModal: PropTypes.func,
 };
 
 RegisterForm.defaultProps = {
   handleFormChange: () => {},
+  closeModal: () => {},
 };
 
 export default RegisterForm;

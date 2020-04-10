@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { getColorsForButtonType } from '../styles/utilFunctions';
 
 export const StyledButton = styled(motion.button)(props => {
-  const colors = getColorsForButtonType(props.type);
+  const colors = getColorsForButtonType(props.color);
 
   return css`
     position: relative;
@@ -38,7 +38,7 @@ export const StyledButton = styled(motion.button)(props => {
 });
 
 export const StyledButtonBubble = styled(motion.div)(props => {
-  const colors = getColorsForButtonType(props.type);
+  const colors = getColorsForButtonType(props.color);
 
   return css`
     pointer-events: none;

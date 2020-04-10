@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/react-hooks';
 
 export const query = gql`
   query displayNameExists($displayName: String!) {
-    Users(where: { displayName: { _eq: $displayName } }) {
+    User(where: { displayName: { _eq: $displayName } }) {
       displayName
     }
   }

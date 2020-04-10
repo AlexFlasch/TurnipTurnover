@@ -10,7 +10,8 @@ export default styled.div`
 
   opacity: 0.8;
 
-  button {
+  button,
+  a {
     display: flex;
     align-content: center;
 

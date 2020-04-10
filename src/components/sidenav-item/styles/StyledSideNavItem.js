@@ -20,6 +20,7 @@ export default styled.li`
 
     span {
       margin: auto 0;
+      white-space: pre;
     }
   }
 `;

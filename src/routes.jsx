@@ -1,10 +1,18 @@
 import React, { useContext } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import styled from 'styled-components';
 
 import AuthContext from './contexts/auth';
 
 import HomePage from './pages/HomePage';
+import TrackPage from './pages/TrackPage';
+import AccountPage from './pages/AccountPage';
+
 import SideNav from './components/sidenav/SideNav';
 import SideNavItem from './components/sidenav-item/SideNavItem';
 import CurrentUserItem from './components/current-user-sidenav-item/CurrentUserSideNavItem';
@@ -21,11 +29,21 @@ const StyledContentContainer = styled.div`
   padding: 15px;
 `;
 
-const Routes = () => {
+// a quick wrapper around react-router-dom's Route
+// these routes will automatically redirect the user
+// back to the home page if the user is no longer logged in
+const AccountRoute = props => {
   const { isSignedIn } = useContext(AuthContext);
 
+  return isSignedIn ? <Route {...props} /> : <Redirect to="/" />;
+};
+
+const Routes = () => {
+  const { user, isSignedIn } = useContext(AuthContext);
+
   const bottomItemIcon = isSignedIn ? 'lnr-user' : 'lnr-enter';
-  const bottomItemText = isSignedIn ? 'My Account' : 'Sign in';
+  const bottomItemText =
+    isSignedIn && user.displayName ? user.displayName : 'Sign in';
   const bottomItem = (
     <CurrentUserItem icon={bottomItemIcon} text={bottomItemText} />
   );
@@ -35,12 +53,28 @@ const Routes = () => {
       <Router>
         <SideNav bottomItem={bottomItem}>
           <SideNavItem to="/" icon="lnr-home" text="Home" />
+          {/* restrtict these items to users that are signed in */}
+          {isSignedIn ? (
+            <>
+              <SideNavItem
+                to="/track"
+                icon="lnr-pencil"
+                text="Log Your Prices"
+              />
+            </>
+          ) : null}
         </SideNav>
         <Switch>
           <StyledContentContainer>
             <Route path="/">
               <HomePage />
             </Route>
+            <AccountRoute path="/track">
+              <TrackPage />
+            </AccountRoute>
+            <AccountRoute path="/account">
+              <AccountPage />
+            </AccountRoute>
           </StyledContentContainer>
         </Switch>
       </Router>

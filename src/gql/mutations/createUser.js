@@ -3,9 +3,10 @@ import { useMutation } from '@apollo/react-hooks';
 
 export const mutation = gql`
   mutation createUser($uuid: String!, $displayName: String!) {
-    insert_Users(objects: { uuid: $uuid, displayName: $displayName }) {
+    insert_User(objects: { uuid: $uuid, displayName: $displayName }) {
       returning {
         uuid
+        displayName
       }
     }
   }
