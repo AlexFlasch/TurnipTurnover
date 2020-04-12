@@ -3,3 +3,5 @@ export const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)
 export const isValidEmail = value => emailPattern.test(value);
 
 export const isValidPassword = value => value.length >= 8;
+
+export const isNumeric = value => !/\D/.test(value);

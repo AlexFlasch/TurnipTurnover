@@ -43,7 +43,7 @@ const Routes = () => {
 
   const bottomItemIcon = isSignedIn ? 'lnr-user' : 'lnr-enter';
   const bottomItemText =
-    isSignedIn && user.displayName ? user.displayName : 'Sign in';
+    isSignedIn && user && user.displayName ? user.displayName : 'Sign in';
   const bottomItem = (
     <CurrentUserItem icon={bottomItemIcon} text={bottomItemText} />
   );

@@ -1,19 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import useMaskedInput from '@viewstools/use-masked-input';
 
 import palette from '../../theme-palette';
 
-import StyledInputWrapper from './styles/StyledInputWrapper';
-import StyledLabel from './styles/StyledLabel';
-import StyledInput from './styles/StyledInput';
-import StyledUnderline from './styles/StyledUnderline';
+import StyledInputWrapper from '../input/styles/StyledInputWrapper';
+import StyledLabel from '../input/styles/StyledLabel';
+import StyledInput from '../input/styles/StyledInput';
+import StyledUnderline from '../input/styles/StyledUnderline';
 
-const Input = props => {
+const MaskedInput = props => {
+  const inputRef = useRef(null);
+
   const [isActive, setIsActive] = useState(false);
   const [value, setValue] = useState(props.value);
+  const [parsedValue, setParseValue] = useState(
+    props.parse ? props.parse(props.value) : props.value,
+  );
   const [isPristine, setIsPristine] = useState(true);
 
-  // update value shown inside the input if the value prop changes
+  // update the input's internal value if the value prop changes
   useEffect(() => {
     setValue(props.value);
   }, [props.value]);
@@ -41,6 +47,21 @@ const Input = props => {
       setUnderlineVariant(isActive ? 'active' : 'inactive');
     }
   }, [isPristine, isActive, validationClass]);
+
+  const handleMaskingChange = useMaskedInput({
+    input: inputRef,
+    mask: props.mask,
+    value: props.parse ? parsedValue : value,
+    onChange: event => {
+      if (isPristine) {
+        setIsPristine(false);
+      }
+
+      props.handleChange(event.target.value);
+
+      setValue(event.target.value);
+    },
+  });
 
   // animation properties
   const labelVariants = {
@@ -92,17 +113,11 @@ const Input = props => {
         animate={underlineVariant}
       />
       <StyledInput
+        ref={inputRef}
         className={validationClass}
         type={props.type}
-        onChange={event => {
-          if (isPristine) {
-            setIsPristine(false);
-          }
-          props.handleChange(event.target.value);
-          setValue(event.target.value);
-        }}
-        value={value}
-        onClick={props.onClick}
+        onChange={handleMaskingChange}
+        value={props.parse ? props.parse(props.value) : props.value}
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(false)}
         autoComplete={props.autoComplete}
@@ -116,10 +131,12 @@ const Input = props => {
   );
 };
 
-Input.propTypes = {
+MaskedInput.propTypes = {
   label: PropTypes.string,
   handleChange: PropTypes.func,
-  onClick: PropTypes.func,
+  parse: PropTypes.func,
+  mask: PropTypes.array.isRequired,
+  keepCharPositions: PropTypes.bool,
   type: PropTypes.oneOf(['text', 'password']),
   value: PropTypes.any,
   autoComplete: PropTypes.string,
@@ -127,11 +144,12 @@ Input.propTypes = {
   isValid: PropTypes.bool,
 };
 
-Input.defaultProps = {
+MaskedInput.defaultProps = {
+  keepCharPositions: false,
   type: 'text',
   value: '',
   autoComplete: undefined,
   handleChange: () => {},
 };
 
-export default Input;
+export default MaskedInput;

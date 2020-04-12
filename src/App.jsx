@@ -8,6 +8,8 @@ import Routes from './routes';
 
 import { modalBackdrop } from './components/sign-in-modal/styles/StyledSignInModal';
 
+import 'react-datepicker/dist/react-datepicker.css';
+
 const App = () => {
   return (
     <ApolloProvider client={gqlClient}>

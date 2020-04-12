@@ -1,15 +1,20 @@
 import React, { useContext } from 'react';
-import { Redirect } from 'react-router-dom';
+import { useQuery } from '@apollo/react-hooks';
 
 import AuthContext from '../../contexts/auth';
 
 import Grid from '../../components/grid/Grid';
-import Input from '../../components/input/Input';
+
+import PriceLogForm from './PriceLogForm';
 
 import StyledTrackPageWrapper from './styles/StyledTrackPageWrapper';
 
 const TrackPage = props => {
-  const { user } = useContext(AuthContext);
+  const {
+    user: { id: userId },
+  } = useContext(AuthContext);
+
+  // const { data, loading } = useQuery();
 
   const BUY_LOG = 'Buy';
   const SELL_LOG = 'Sell';
@@ -56,9 +61,8 @@ const TrackPage = props => {
 
   return (
     <StyledTrackPageWrapper>
-      {console.log('current user: ', user)}
       <Grid columns={columns} data={rows} />
-      <Input label="Turnip Price" />
+      <PriceLogForm />
     </StyledTrackPageWrapper>
   );
 };

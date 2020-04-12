@@ -7,7 +7,7 @@ import AuthContext from '../../contexts/auth';
 
 // gql queries
 import { query as displayNameQuery } from '../../gql/queries/displayNameExists';
-import { mutation as createUserMutation } from '../../gql/mutations/createUser';
+import { mutation as createUserMutation } from '../../gql/mutations/addUser';
 
 // helper functions
 import { isValidEmail, isValidPassword } from '../../utils/validation-fns';

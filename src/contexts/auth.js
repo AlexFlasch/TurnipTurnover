@@ -52,11 +52,26 @@ const signOutUser = dispatch => async () => {
   }
 };
 
-const registerUser = dispatch => async (email, displayName, password) => {
+const registerUser = (dispatch, client) => async (
+  email,
+  displayName,
+  password,
+) => {
   try {
     await firebaseApp.auth().createUserWithEmailAndPassword(email, password);
-    const user = firebaseApp.auth().currentUser;
-    dispatch({ type: 'userSignIn', payload: { user, displayName } });
+    const fbUser = firebaseApp.auth().currentUser;
+
+    const { data } = await client.query({
+      query: getUserData,
+      variables: { uuid: fbUser.uid },
+    });
+    // yeah I still need optional chaining.
+    const user = data && data.User && data.User[0] && data.User[0];
+
+    dispatch({ type: 'userSignIn', payload: user });
+
+    // add the user to localStorage to persist user sessions
+    localStorage.setItem('user', JSON.stringify(user));
   } catch (e) {
     return e;
   }
@@ -86,7 +101,7 @@ const reducer = (state, action) => {
     case 'userSignIn':
       return {
         ...state,
-        user: payload.user,
+        user: payload,
         isSignedIn: true,
       };
 
@@ -108,7 +123,7 @@ export const AuthProvider = props => {
   const providerValue = {
     ...state,
     signInUser: signInUser(dispatch, props.gqlClient),
-    registerUser: registerUser(dispatch),
+    registerUser: registerUser(dispatch, props.gqlClient),
     signOutUser: signOutUser(dispatch),
     resetPassword,
   };

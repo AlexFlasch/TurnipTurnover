@@ -5,8 +5,8 @@ import { useTable } from 'react-table';
 import StyledTable from './styles/StyledTable';
 
 const Grid = props => {
-  const columns = useMemo(() => [...props.columns]);
-  const data = useMemo(() => [...props.data]);
+  const columns = useMemo(() => props.columns, [props.columns]);
+  const data = useMemo(() => props.data, [props.data]);
 
   const {
     getTableProps,
