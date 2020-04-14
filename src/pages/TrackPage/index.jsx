@@ -5,7 +5,7 @@ import AuthContext from '../../contexts/auth';
 
 import Grid from '../../components/grid/Grid';
 
-import PriceLogForm from './PriceLogForm';
+import PriceLogForm from './components/PriceLogForm';
 
 import StyledTrackPageWrapper from './styles/StyledTrackPageWrapper';
 

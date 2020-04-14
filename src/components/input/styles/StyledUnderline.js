@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { motion } from 'framer-motion';
 
 export default styled(motion.div)`
@@ -10,4 +10,12 @@ export default styled(motion.div)`
   width: 100%;
 
   pointer-events: none;
+
+  /* if the input is disabled set the opacity to 0.5, otherwise leave as normal */
+  ${props =>
+    props.disabled
+      ? css`
+          opacity: 0.5;
+        `
+      : ''}
 `;

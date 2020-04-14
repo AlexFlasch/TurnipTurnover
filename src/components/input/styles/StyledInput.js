@@ -1,13 +1,15 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { motion } from 'framer-motion';
 
 import palette from '../../../theme-palette';
 
 export default styled(motion.input)`
-  background: none;
+  background-color: ${palette.uiDark};
   border: 0;
-  padding: 0;
+  border-radius: 5px 5px 0 0;
 
+  padding: 0;
+  padding-left: 5px;
   height: 5vh;
   width: 100%;
   font-size: 3vh;
@@ -17,4 +19,13 @@ export default styled(motion.input)`
   z-index: 2;
 
   color: ${palette.uiLight};
+
+  /* if the input is disabled set the opacity to 0.5, otherwise leave as normal */
+  ${props =>
+    props.disabled
+      ? css`
+          opacity: 0.3;
+          cursor: not-allowed;
+        `
+      : ''}
 `;

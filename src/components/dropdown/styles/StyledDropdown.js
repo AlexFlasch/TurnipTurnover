@@ -20,14 +20,15 @@ export default {
     return {
       ...provided,
       height: '100%',
-      backgroundColor: palette.bg,
+      backgroundColor: palette.uiDark,
       color: palette.uiLight,
-      borderRadius: 0,
+      borderRadius: '5px 5px 0 0',
       border: 0,
       borderBottomWidth: borderWidth,
       borderBottomStyle: 'solid',
       borderBottomColor: borderColor,
       boxShadow: 'none',
+      opacity: state.isDisabled ? 0.3 : 1,
       '&:hover': {
         borderColor: borderColor,
       },

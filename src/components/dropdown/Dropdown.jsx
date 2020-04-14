@@ -17,6 +17,7 @@ const Dropdown = props => {
   return (
     <Select
       {...props}
+      isDisabled={props.disabled}
       options={props.options}
       styles={StyledDropdown}
       components={{ DropdownIndicator: CustomDropdownContainer }}

@@ -22,7 +22,6 @@ export const StyledButton = styled(motion.button)(props => {
 
     span {
       position: relative;
-      z-index: 2;
     }
 
     &:hover {

@@ -32,7 +32,7 @@ const Button = props => {
 
   return (
     <StyledButton
-      className={props.disabled ? 'disabled' : ''}
+      className={`${props.className} ${props.disabled ? 'disabled' : ''}`}
       type={props.type}
       color={props.color}
       onMouseEnter={() => setIsHovered(true)}
@@ -44,13 +44,14 @@ const Button = props => {
         props.disabled ? props.onDisabledClick() : props.onClick();
       }}
     >
-      <span>{props.text}</span>
       <StyledButtonBubble
         color={props.color}
         variants={bubbleVariants}
         initial="unhovered"
+        // transformTemplate={({ scale }) => `scale(${scale})`}
         animate={isHovered && !props.disabled ? 'hovered' : 'unhovered'}
       />
+      <span>{props.text}</span>
     </StyledButton>
   );
 };

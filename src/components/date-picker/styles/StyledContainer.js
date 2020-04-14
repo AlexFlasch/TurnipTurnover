@@ -51,7 +51,21 @@ export default styled.div`
   /* selected color for day */
   .react-datepicker__day--keyboard-selected,
   .react-datepicker__month-text--keyboard-selected,
-  .react-datepicker__quarter-text--keyboard-selected {
+  .react-datepicker__quarter-text--keyboard-selected,
+  .react-datepicker__day--selected,
+  .react-datepicker__day--in-selecting-range,
+  .react-datepicker__day--in-range,
+  .react-datepicker__month-text--selected,
+  .react-datepicker__month-text--in-selecting-range,
+  .react-datepicker__month-text--in-range,
+  .react-datepicker__quarter-text--selected,
+  .react-datepicker__quarter-text--in-selecting-range,
+  .react-datepicker__quarter-text--in-range,
+  .react-datepicker__time-container
+    .react-datepicker__time
+    .react-datepicker__time-box
+    ul.react-datepicker__time-list
+    li.react-datepicker__time-list-item--selected {
     background-color: ${palette.uiLight};
     color: ${palette.uiDark};
   }

@@ -30,22 +30,38 @@ const Input = props => {
     }
   }, [props.isValid]);
 
-  // change underline animation state based on input state
-  const [underlineVariant, setUnderlineVariant] = useState('inactive');
+  // change label animation state based on input state
+  const [labelVariant, setLabelVariant] = useState('inactive');
   useEffect(() => {
-    if (!isPristine && validationClass === 'valid') {
+    if (props.disabled) {
+      setLabelVariant('disabled');
+    } else if (isActive || value !== '') {
+      setLabelVariant('active');
+    } else {
+      setLabelVariant('inactive');
+    }
+  }, [props.disabled, isActive, value]);
+
+  // change underline animation state based on input state
+  const [underlineVariant, setUnderlineVariant] = useState(
+    props.disabled ? 'disabled' : 'inactive',
+  );
+  useEffect(() => {
+    if (props.disabled) {
+      setUnderlineVariant('disabled');
+    } else if (!isPristine && validationClass === 'valid') {
       setUnderlineVariant('valid');
     } else if (!isPristine && validationClass === 'invalid') {
       setUnderlineVariant('invalid');
     } else {
       setUnderlineVariant(isActive ? 'active' : 'inactive');
     }
-  }, [isPristine, isActive, validationClass]);
+  }, [isPristine, isActive, validationClass, props.disabled]);
 
   // animation properties
   const labelVariants = {
     active: {
-      y: '-3vh',
+      y: '-3.25vh',
       fontSize: '1.5vh',
       opacity: 1,
     },
@@ -54,33 +70,63 @@ const Input = props => {
       fontSize: '3vh',
       opacity: 0.5,
     },
+    disabled: {
+      y: 0,
+      fontSize: '3vh',
+      opacity: 0.3,
+    },
   };
 
   const underlineVariants = {
     active: {
       height: 3,
       backgroundColor: palette.accentMint,
+      backgroundImage:
+        'linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 75%, transparent 75%, transparent 100%)',
+      backgroundSize: '10px 0px',
+      opacity: 1,
     },
     valid: {
       height: 3,
       backgroundColor: palette.accentLime,
+      backgroundImage:
+        'linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 75%, transparent 75%, transparent 100%)',
+      backgroundSize: '10px 0px',
+      opacity: 1,
     },
     invalid: {
       height: 3,
       backgroundColor: palette.error,
+      backgroundImage:
+        'linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 75%, transparent 75%, transparent 100%)',
+      backgroundSize: '10px 0px',
+      opacity: 1,
     },
     inactive: {
       height: 1,
       backgroundColor: palette.uiLight,
+      backgroundImage:
+        'linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 75%, transparent 75%, transparent 100%)',
+      backgroundSize: '10px 0px',
+      opacity: 1,
+    },
+    disabled: {
+      height: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0)',
+      backgroundImage: `linear-gradient(90deg, ${palette.uiLight}, ${
+        palette.uiLight
+      } 75%, transparent 75%, transparent 100%)`,
+      backgroundSize: '10px 1px',
+      opacity: 0.3,
     },
   };
 
   return (
-    <StyledInputWrapper>
+    <StyledInputWrapper className={props.className}>
       <StyledLabel
         variants={labelVariants}
         initial="inactive"
-        animate={isActive || value !== '' ? 'active' : 'inactive'}
+        animate={labelVariant}
         transformTemplate={({ y }) => `translateY(${y})`}
       >
         {props.label}
@@ -90,6 +136,7 @@ const Input = props => {
         initial="inactive"
         variants={underlineVariants}
         animate={underlineVariant}
+        disabled={props.disabled}
       />
       <StyledInput
         className={validationClass}
@@ -106,6 +153,7 @@ const Input = props => {
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(false)}
         autoComplete={props.autoComplete}
+        disabled={props.disabled}
       />
       {isPristine ? null : (
         <span className={`validation-msg ${validationClass}`}>
@@ -123,15 +171,17 @@ Input.propTypes = {
   type: PropTypes.oneOf(['text', 'password']),
   value: PropTypes.any,
   autoComplete: PropTypes.string,
+  disabled: PropTypes.bool,
   validationMessage: PropTypes.string,
   isValid: PropTypes.bool,
 };
 
 Input.defaultProps = {
+  handleChange: () => {},
   type: 'text',
   value: '',
   autoComplete: undefined,
-  handleChange: () => {},
+  disabled: false,
 };
 
 export default Input;
