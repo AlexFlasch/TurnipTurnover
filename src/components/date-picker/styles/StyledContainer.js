@@ -72,7 +72,7 @@ export default styled.div`
 
   .react-datepicker__time-container {
     width: 90px;
-    border-left: 1px solid ${palette.bg};
+    border-left: 1px solid ${palette.uiDarker};
     background-color: ${palette.uiDark};
     float: unset;
   }
@@ -95,7 +95,7 @@ export default styled.div`
   }
 
   .react-datepicker__day:hover {
-    background-color: ${palette.bg};
+    background-color: ${palette.uiDarker};
     color: ${palette.uiLight};
   }
 
@@ -105,7 +105,7 @@ export default styled.div`
     .react-datepicker__time-box
     ul.react-datepicker__time-list
     li.react-datepicker__time-list-item:hover {
-    background-color: ${palette.bg};
+    background-color: ${palette.uiDarker};
     color: ${palette.uiLight};
   }
 `;

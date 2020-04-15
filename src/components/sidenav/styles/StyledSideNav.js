@@ -10,7 +10,7 @@ export default styled(motion.nav)`
   width: 75px;
   height: 100%;
   z-index: 5;
-  background-color: ${palette.bg};
+  background-color: ${palette.uiDarker};
 
   .nav-bg {
     height: 100%;

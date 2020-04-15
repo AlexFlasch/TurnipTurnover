@@ -22,7 +22,7 @@ export default styled.table`
   }
 
   tbody tr:nth-child(even) {
-    background-color: ${palette.bg};
+    background-color: ${palette.uiDarker};
   }
 
   /* add bottom border radii to the last row's first and last td */

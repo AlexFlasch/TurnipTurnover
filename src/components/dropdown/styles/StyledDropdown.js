@@ -69,7 +69,7 @@ export default {
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isFocused ? palette.bg : palette.uiDark,
+    backgroundColor: state.isFocused ? palette.uiDarker : palette.uiDark,
     color: palette.uiLight,
   }),
 };

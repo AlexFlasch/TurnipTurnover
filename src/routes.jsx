@@ -7,6 +7,8 @@ import {
 } from 'react-router-dom';
 import styled from 'styled-components';
 
+import palette from './theme-palette';
+
 import AuthContext from './contexts/auth';
 
 import HomePage from './pages/HomePage';
@@ -21,7 +23,7 @@ const StyledAppContainer = styled.main`
   width: 100vw;
   height: 100vh;
 
-  background-color: #232931;
+  background-color: ${palette.bg};
 `;
 
 const StyledContentContainer = styled.div`
