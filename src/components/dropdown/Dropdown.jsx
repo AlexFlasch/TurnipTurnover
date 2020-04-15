@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 
+import StyledDropdownContainer from './styles/StyledDropdownContainer';
 import StyledDropdown from './styles/StyledDropdown';
 import StyledDropdownIndicator from './styles/StyledDropdownIndicator';
 
@@ -15,13 +16,19 @@ const CustomDropdownContainer = ({ innerProps, isFocused }) => {
 
 const Dropdown = props => {
   return (
-    <Select
-      {...props}
-      isDisabled={props.disabled}
-      options={props.options}
-      styles={StyledDropdown}
-      components={{ DropdownIndicator: CustomDropdownContainer }}
-    />
+    <StyledDropdownContainer
+      className={props.className}
+      disabled={props.disabled}
+    >
+      {props.label ? <label>{props.label}</label> : null}
+      <Select
+        {...props}
+        isDisabled={props.disabled}
+        options={props.options}
+        styles={StyledDropdown}
+        components={{ DropdownIndicator: CustomDropdownContainer }}
+      />
+    </StyledDropdownContainer>
   );
 };
 

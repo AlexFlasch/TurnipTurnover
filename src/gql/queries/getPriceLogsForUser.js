@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
 
 export const query = gql`
-  query getPriceLogsForUser($id: Int!) {
-    User(where: { id: { _eq: $id } }, limit: 1) {
-      priceLogs {
+  query getPriceLogsForUser($userId: Int!) {
+    User(where: { id: { _eq: $userId } }, limit: 1) {
+      PriceLogs {
         isBuyLog
         isSellLog
         price

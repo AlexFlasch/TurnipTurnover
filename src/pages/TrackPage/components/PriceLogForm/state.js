@@ -1,6 +1,10 @@
 import { isNumeric } from '../../../../utils/validation-fns';
 
-import { LOG_TYPES, TURNIP_INPUT_MODES } from './constants';
+import {
+  LOG_TYPES,
+  LOG_TYPES_OPTIONS,
+  TURNIP_INPUT_MODE_OPTIONS,
+} from './constants';
 
 const getTurnipValidationStatus = value => {
   let validationMsg = '';
@@ -89,7 +93,6 @@ export const formReducer = (state, action) => {
         payload,
         state.turnipsInputDisabled,
       ));
-      console.log('payload in updateTurnips action: ', payload);
       return {
         ...state,
         turnips: {
@@ -122,25 +125,30 @@ export const formReducer = (state, action) => {
         datetime: payload,
       };
 
+    case 'resetForm':
+      return {
+        ...formInitialState,
+      };
+
     default:
       return state;
   }
 };
 
 export const formInitialState = {
-  logType: LOG_TYPES.PRICE_CHECK,
+  logType: LOG_TYPES_OPTIONS[0],
   turnipsInputDisabled: true,
   turnipsInputLabel: '',
   turnips: {
     isValid: true,
     validationMsg: '',
-    value: 0,
+    value: '',
   },
-  turnipInputMode: TURNIP_INPUT_MODES.TOTAL,
+  turnipInputMode: TURNIP_INPUT_MODE_OPTIONS[0],
   price: {
     isValid: false,
     validationMsg: '',
-    value: 0,
+    value: '',
   },
   datetime: new Date(),
 };

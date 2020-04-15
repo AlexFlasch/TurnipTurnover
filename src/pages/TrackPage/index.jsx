@@ -1,10 +1,14 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
+import parseISO from 'date-fns/parseISO';
+
+import { mdy12hDatetimeFormat } from '../../utils/i18n-formats';
 
 import AuthContext from '../../contexts/auth';
 
-import Grid from '../../components/grid/Grid';
+import { query } from '../../gql/queries/getPriceLogsForUser';
 
+import Grid from '../../components/grid/Grid';
 import PriceLogForm from './components/PriceLogForm';
 
 import StyledTrackPageWrapper from './styles/StyledTrackPageWrapper';
@@ -14,7 +18,9 @@ const TrackPage = props => {
     user: { id: userId },
   } = useContext(AuthContext);
 
-  // const { data, loading } = useQuery();
+  const { data, loading } = useQuery(query, { variables: { userId } });
+
+  const [submittedRows, setSubmittedRows] = useState([]);
 
   const BUY_LOG = 'Buy';
   const SELL_LOG = 'Sell';
@@ -28,41 +34,46 @@ const TrackPage = props => {
     { header: 'Profit', accessor: 'profit' },
   ];
 
-  const rows = [
-    {
-      buySell: BUY_LOG,
-      price: 104,
-      turnips: 2710,
-      datetime: new Date().toString(),
-      profit: (-1 * 104 * 2710).toLocaleString(),
-    },
-    {
-      buySell: PRICE_LOG,
-      price: 78,
-      turnips: 0,
-      datetime: new Date().toString(),
-      profit: 0,
-    },
-    {
-      buySell: PRICE_LOG,
-      price: 97,
-      turnips: 0,
-      datetime: new Date().toString(),
-      profit: 0,
-    },
-    {
-      buySell: SELL_LOG,
-      price: 156,
-      turnips: 2710,
-      datetime: new Date().toString(),
-      profit: (156 * 2710).toLocaleString(),
-    },
-  ];
+  const createPriceLogRow = log => {
+    let buySell;
+    let profit;
+    if (log.isBuyLog) {
+      buySell = BUY_LOG;
+      profit = -1 * log.price * log.turnips;
+    } else if (log.isSellLog) {
+      buySell = SELL_LOG;
+      profit = log.price * log.turnips;
+    } else {
+      buySell = PRICE_LOG;
+      profit = '';
+    }
+
+    return {
+      buySell,
+      price: log.price,
+      turnips: log.turnips,
+      datetime: mdy12hDatetimeFormat(parseISO(log.dateTime)),
+      profit,
+    };
+  };
+
+  const createRowsFromQuery = () => {
+    if (!loading && data?.User?.[0]?.PriceLogs) {
+      return data.User[0].PriceLogs.map(log => createPriceLogRow(log));
+    } else return [];
+  };
+
+  const addSubmittedLog = newLog => {
+    setSubmittedRows([...submittedRows, createPriceLogRow(newLog)]);
+  };
+
+  const combinedRows = [...createRowsFromQuery(), ...submittedRows];
+  console.log('combined rows: ', combinedRows);
 
   return (
     <StyledTrackPageWrapper>
-      <Grid columns={columns} data={rows} />
-      <PriceLogForm />
+      <Grid columns={columns} data={combinedRows} />
+      <PriceLogForm handleSubmit={addSubmittedLog} />
     </StyledTrackPageWrapper>
   );
 };

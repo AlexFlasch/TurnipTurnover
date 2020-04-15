@@ -26,8 +26,8 @@ const signInUser = (dispatch, client) => async (email, password) => {
       query: getUserData,
       variables: { uuid: fbUser.uid },
     });
-    // jesus christ I need optional chaining so bad
-    const user = data && data.User && data.User[0] && data.User[0];
+
+    const user = data?.User?.[0];
 
     // update the auth reducer with the user object retrieved from Hasura
     dispatch({ type: 'userSignIn', payload: user });
@@ -65,8 +65,8 @@ const registerUser = (dispatch, client) => async (
       query: getUserData,
       variables: { uuid: fbUser.uid },
     });
-    // yeah I still need optional chaining.
-    const user = data && data.User && data.User[0] && data.User[0];
+
+    const user = data?.User?.[0];
 
     dispatch({ type: 'userSignIn', payload: user });
 

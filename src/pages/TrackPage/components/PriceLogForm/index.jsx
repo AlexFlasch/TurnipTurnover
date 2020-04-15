@@ -49,17 +49,21 @@ const PriceLogForm = props => {
 
       const amountTurnips =
         state.turnipInputMode === TURNIP_INPUT_MODES.STACK
-          ? state.turnips.value * 10
-          : state.turnips.value;
+          ? +state.turnips.value * 10
+          : +state.turnips.value;
+
+      const newLog = {
+        price: state.price.value,
+        isBuyLog: state.logType === LOG_TYPES.BUY,
+        isSellLog: state.logType === LOG_TYPES.SELL,
+        turnips: amountTurnips === '' ? null : amountTurnips,
+        dateTime: formatISO(state.datetime),
+      };
 
       addUserPriceLog({
         variables: {
           userId,
-          price: state.price.value,
-          isBuyLog: state.logType === LOG_TYPES.BUY,
-          isSellLog: state.logType === LOG_TYPES.SELL,
-          turnips: amountTurnips,
-          datetime: formatISO(state.datetime),
+          ...newLog,
         },
       });
 
@@ -69,19 +73,26 @@ const PriceLogForm = props => {
         isBuy: state.logType === LOG_TYPES.BUY,
         isSell: state.logType === LOG_TYPES.SELL,
         turnips: amountTurnips,
-        datetime: formatISO(state.datetime),
+        dateTime: formatISO(state.datetime),
       });
+
+      dispatch({ type: 'resetForm' });
+
+      props.handleSubmit(newLog);
     }
   };
 
   return (
     <StyledPriceLogForm onSubmit={handleSubmit}>
       <Dropdown
+        label="Log Type"
         className="log-type"
         options={LOG_TYPES_OPTIONS}
         isSearchable={false}
         defaultValue={LOG_TYPES_OPTIONS[0]}
-        onChange={value => dispatch({ type: 'updateLogType', payload: value })}
+        onChange={option =>
+          dispatch({ type: 'updateLogType', payload: option })
+        }
       />
       <Input
         className="turnip-amount"
@@ -90,16 +101,20 @@ const PriceLogForm = props => {
         handleChange={value =>
           dispatch({ type: 'updateTurnipAmount', payload: value })
         }
+        isValid={state.turnips.isValid}
+        validationMessage={state.turnips.validationMsg}
+        value={state.turnips.value}
       />
       <Dropdown
+        label="Measure Turnips In"
         className="turnip-input-mode"
         options={TURNIP_INPUT_MODE_OPTIONS}
         isSearchable={false}
         disabled={state.turnipsInputDisabled}
+        defaultValue={TURNIP_INPUT_MODE_OPTIONS[0]}
         onChange={value =>
           dispatch({ type: 'updateTurnipInputMode', payload: value })
         }
-        value={state.turnipInputMode}
       />
       <Input
         className="turnip-price"
@@ -109,6 +124,7 @@ const PriceLogForm = props => {
         }
         isValid={state.price.isValid}
         validationMessage={state.price.validationMsg}
+        value={state.price.value}
       />
       <div className="log-datetime">
         <DatePicker

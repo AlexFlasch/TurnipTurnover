@@ -6,12 +6,12 @@ export const mutation = gql`
     $price: Int!
     $isBuyLog: Boolean
     $isSellLog: Boolean
-    $datetime: timestamp
+    $dateTime: timestamp
     $turnips: Int
   ) {
     insert_PriceLog(
       objects: {
-        dateTime: $datetime
+        dateTime: $dateTime
         isBuyLog: $isBuyLog
         isSellLog: $isSellLog
         price: $price
