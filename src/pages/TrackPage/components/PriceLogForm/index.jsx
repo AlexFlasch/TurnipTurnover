@@ -67,15 +67,6 @@ const PriceLogForm = props => {
         },
       });
 
-      console.log('submitting: ', {
-        userId,
-        price: state.price.value,
-        isBuy: state.logType === LOG_TYPES.BUY,
-        isSell: state.logType === LOG_TYPES.SELL,
-        turnips: amountTurnips,
-        dateTime: formatISO(state.datetime),
-      });
-
       dispatch({ type: 'resetForm' });
 
       props.handleSubmit(newLog);

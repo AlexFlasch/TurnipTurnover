@@ -31,6 +31,7 @@ const StyledAppContainer = styled.main`
 const StyledContentContainer = styled.div`
   margin-left: 75px;
   padding: 15px;
+  min-height: 100vh;
 
   overflow-y: auto;
 `;
@@ -72,7 +73,7 @@ const Routes = () => {
         </SideNav>
         <Switch>
           <StyledContentContainer>
-            <Route path="/">
+            <Route exact path="/">
               <HomePage />
             </Route>
             <AccountRoute path="/track">

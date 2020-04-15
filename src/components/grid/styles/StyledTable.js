@@ -8,7 +8,7 @@ export default styled.table`
   background-color: ${palette.uiDarker};
   border-collapse: collapse;
   border-radius: ${props => (props.paginated ? '5px 5px 0 0' : '5px')};
-  box-shadow: ${palette.cardShadow};
+  box-shadow: ${props => (props.paginated ? 'none' : palette.cardShadow)};
 
   padding: 10px;
 

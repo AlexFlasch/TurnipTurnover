@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useTable, usePagination } from 'react-table';
 
 import StyledTable from './styles/StyledTable';
+import StyledPaginatedGrid from './styles/StyledPaginatedGrid';
 
 import GridPaginator from './components/grid-paginator/GridPaginator';
 
@@ -35,7 +36,7 @@ const PaginatedGrid = props => {
   }, [props.pageSize]);
 
   return (
-    <>
+    <StyledPaginatedGrid>
       <StyledTable {...getTableProps()} paginated={true}>
         <thead>
           {headerGroups.map(headerGroup => (
@@ -71,7 +72,7 @@ const PaginatedGrid = props => {
         pageOptions={pageOptions}
         gotoPage={gotoPage}
       />
-    </>
+    </StyledPaginatedGrid>
   );
 };
 

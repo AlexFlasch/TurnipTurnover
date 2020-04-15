@@ -10,8 +10,6 @@ const GridPaginator = props => {
     .fill()
     .map((_, i) => ({ label: i + 1, value: i }));
 
-  console.log('page count: ', props.pageCount);
-
   const longestOptionDigits = Math.ceil(props.pageCount + 1 / 10);
 
   return (

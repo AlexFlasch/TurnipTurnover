@@ -69,7 +69,6 @@ const TrackPage = props => {
   };
 
   const combinedRows = [...createRowsFromQuery(), ...submittedRows];
-  console.log('combined rows: ', combinedRows);
 
   return (
     <StyledTrackPageWrapper>
