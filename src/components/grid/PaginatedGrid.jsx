@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTable, usePagination } from 'react-table';
 
 import StyledTable from './styles/StyledTable';
 
-import GridPaginator from './components/GridPaginator.jsx/GridPaginator';
+import GridPaginator from './components/grid-paginator/GridPaginator';
 
 const PaginatedGrid = props => {
   const {
@@ -21,47 +21,58 @@ const PaginatedGrid = props => {
     nextPage,
     previousPage,
     setPageSize,
-  } = useTable({
-    columns: props.columns,
-    data: props.data,
-  }, usePagination);
+    state: { pageIndex /* pageSize */ },
+  } = useTable(
+    {
+      columns: props.columns,
+      data: props.data,
+    },
+    usePagination,
+  );
 
-  setPageSize(props.pageSize);
+  useEffect(() => {
+    setPageSize(props.pageSize);
+  }, [props.pageSize]);
 
   return (
-    <StyledTable {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render('header')}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {page.map((row, i) => {
-          prepareRow(row)
-          return (
-            <tr {...row.getRowProps(i)}>
-              {row.cells.map(cell => {
-                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-              })}
+    <>
+      <StyledTable {...getTableProps()} paginated={true}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(header => (
+                <th {...header.getHeaderProps()}>{header.render('header')}</th>
+              ))}
             </tr>
-          )
-        })}
-      </tbody>
-    </StyledTable>
-    <GridPaginator
-      pageCount={pageCount}
-      canPreviousPage={canPreviousPage}
-      canNextPage={canNextPage}
-      previousPage={previousPage}
-      nextPage={nextPage}
-      pageOptions={pageOptions}
-      gotoPage={gotoPage}
-    />
-  )
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {page.map((row, i) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </StyledTable>
+      <GridPaginator
+        currentPage={pageIndex}
+        pageCount={pageCount}
+        canPreviousPage={canPreviousPage}
+        canNextPage={canNextPage}
+        previousPage={previousPage}
+        nextPage={nextPage}
+        pageOptions={pageOptions}
+        gotoPage={gotoPage}
+      />
+    </>
+  );
 };
 
 PaginatedGrid.propTypes = {

@@ -24,11 +24,15 @@ const StyledAppContainer = styled.main`
   height: 100vh;
 
   background-color: ${palette.bg};
+
+  overflow-y: hidden;
 `;
 
 const StyledContentContainer = styled.div`
   margin-left: 75px;
   padding: 15px;
+
+  overflow-y: auto;
 `;
 
 // a quick wrapper around react-router-dom's Route

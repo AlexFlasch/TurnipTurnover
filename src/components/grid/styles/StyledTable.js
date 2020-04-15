@@ -5,9 +5,9 @@ import palette from '../../../theme-palette';
 export default styled.table`
   width: 100%;
   color: ${palette.uiLight};
-  background-color: ${palette.uiDark};
+  background-color: ${palette.uiDarker};
   border-collapse: collapse;
-  border-radius: 5px;
+  border-radius: ${props => (props.paginated ? '5px 5px 0 0' : '5px')};
   box-shadow: ${palette.cardShadow};
 
   padding: 10px;
@@ -22,17 +22,17 @@ export default styled.table`
   }
 
   tbody tr:nth-child(even) {
-    background-color: ${palette.uiDarker};
+    background-color: ${palette.uiDark};
   }
 
   /* add bottom border radii to the last row's first and last td */
   tbody tr:last-of-type {
     td:first-of-type {
-      border-bottom-left-radius: 5px;
+      border-bottom-left-radius: ${props => (props.paginated ? '0px' : '5px')};
     }
 
     td:last-of-type {
-      border-bottom-right-radius: 5px;
+      border-bottom-right-radius: ${props => (props.paginated ? '0px' : '5px')};
     }
   }
 

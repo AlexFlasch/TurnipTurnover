@@ -9,7 +9,7 @@ import AuthContext from '../../contexts/auth';
 import { query } from '../../gql/queries/getPriceLogsForUser';
 
 import Card from '../../components/card/Card';
-import Grid from '../../components/grid/Grid';
+import PaginatedGrid from '../../components/grid/PaginatedGrid';
 import PriceLogForm from './components/PriceLogForm';
 
 import StyledTrackPageWrapper from './styles/StyledTrackPageWrapper';
@@ -73,7 +73,7 @@ const TrackPage = props => {
 
   return (
     <StyledTrackPageWrapper>
-      <Grid columns={columns} data={combinedRows} />
+      <PaginatedGrid columns={columns} data={combinedRows} />
       <Card>
         <PriceLogForm handleSubmit={addSubmittedLog} />
       </Card>

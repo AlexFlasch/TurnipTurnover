@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import palette from '../../../../theme-palette';
 import StyledPaginationButton from './styles/StyledPaginationButton';
@@ -34,7 +35,7 @@ const PaginationButton = props => {
       animate={variant}
       onMouseEnter={() => !props.disabled && setVariant('hover')}
       onMouseLeave={() => setVariant('initial')}
-      onClick={handleClick}
+      onClick={props.handleClick}
     >
       {props.children}
     </StyledPaginationButton>

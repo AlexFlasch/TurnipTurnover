@@ -6,7 +6,7 @@ import StyledDropdownContainer from './styles/StyledDropdownContainer';
 import StyledDropdown from './styles/StyledDropdown';
 import StyledDropdownIndicator from './styles/StyledDropdownIndicator';
 
-const CustomDropdownContainer = ({ innerProps, isFocused }) => {
+const CustomDropdownIndicator = ({ innerProps, isFocused }) => {
   return (
     <StyledDropdownIndicator {...innerProps} isFocused={isFocused}>
       <span className="lnr lnr-chevron-down" />
@@ -26,7 +26,7 @@ const Dropdown = props => {
         isDisabled={props.disabled}
         options={props.options}
         styles={StyledDropdown}
-        components={{ DropdownIndicator: CustomDropdownContainer }}
+        components={{ DropdownIndicator: CustomDropdownIndicator }}
       />
     </StyledDropdownContainer>
   );
