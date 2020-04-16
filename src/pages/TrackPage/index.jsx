@@ -6,7 +6,7 @@ import { mdy12hDatetimeFormat } from '../../utils/i18n-formats';
 
 import AuthContext from '../../contexts/auth';
 
-import { query } from '../../gql/queries/getPriceLogsForUser';
+import getPriceLogsForUser from '../../gql/queries/getPriceLogsForUser';
 
 import Card from '../../components/card/Card';
 import PaginatedGrid from '../../components/grid/PaginatedGrid';
@@ -19,7 +19,9 @@ const TrackPage = props => {
     user: { id: userId },
   } = useContext(AuthContext);
 
-  const { data, loading } = useQuery(query, { variables: { userId } });
+  const { data, loading } = useQuery(getPriceLogsForUser, {
+    variables: { userId },
+  });
 
   const [submittedRows, setSubmittedRows] = useState([]);
 

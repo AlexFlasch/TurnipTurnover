@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const query = gql`
+export default gql`
   query getPriceLogsForUser($userId: Int!) {
     User(where: { id: { _eq: $userId } }, limit: 1) {
       PriceLogs {

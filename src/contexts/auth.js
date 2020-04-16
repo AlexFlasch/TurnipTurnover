@@ -2,6 +2,7 @@ import React, { createContext, useReducer } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import getUserData from '../gql/queries/getUserData';
+import addUser from '../gql/mutations/addUser';
 
 // firebase setup
 const firebaseConfig = {
@@ -30,10 +31,12 @@ const signInUser = (dispatch, client) => async (email, password) => {
     const user = data?.User?.[0];
 
     // update the auth reducer with the user object retrieved from Hasura
-    dispatch({ type: 'userSignIn', payload: user });
+    if (user) {
+      dispatch({ type: 'userSignIn', payload: user });
 
-    // add the user to localStorage to persist user sessions
-    localStorage.setItem('user', JSON.stringify(user));
+      // add the user to localStorage to persist user sessions
+      localStorage.setItem('user', JSON.stringify(user));
+    }
   } catch (e) {
     return e;
   }
@@ -61,17 +64,19 @@ const registerUser = (dispatch, client) => async (
     await firebaseApp.auth().createUserWithEmailAndPassword(email, password);
     const fbUser = firebaseApp.auth().currentUser;
 
-    const { data } = await client.query({
-      query: getUserData,
-      variables: { uuid: fbUser.uid },
+    const { data } = await client.mutate({
+      mutation: addUser,
+      variables: { uuid: fbUser.uid, displayName },
     });
 
-    const user = data?.User?.[0];
+    const user = data?.insert_User?.returning?.[0];
 
-    dispatch({ type: 'userSignIn', payload: user });
+    if (user) {
+      dispatch({ type: 'userSignIn', payload: user });
 
-    // add the user to localStorage to persist user sessions
-    localStorage.setItem('user', JSON.stringify(user));
+      // add the user to localStorage to persist user sessions
+      localStorage.setItem('user', JSON.stringify(user));
+    }
   } catch (e) {
     return e;
   }
@@ -85,12 +90,28 @@ const resetPassword = async email => {
   }
 };
 
+const isSignedIn =
+  (firebaseApp.auth().currentUser ||
+    JSON.parse(localStorage.getItem('user'))) !== null;
+
+const getUser = () => {
+  try {
+    JSON.parse(localStorage.getItem('user'));
+  } catch (e) {
+    console.log(
+      "couldn't parse user session from local storage. value is: ",
+      localStorage.getItem('user'),
+    );
+    // delete the entry for the user session to hopefully avoid
+    // entirely locking users out of the app if they have a bad session
+    localStorage.removeItem('user');
+    return null;
+  }
+};
+
 const initialState = {
-  isSignedIn:
-    (firebaseApp.auth().currentUser ||
-      JSON.parse(localStorage.getItem('user'))) !== null,
-  user:
-    firebaseApp.auth().currentUser || JSON.parse(localStorage.getItem('user')),
+  isSignedIn,
+  user: getUser(),
 };
 
 const context = createContext();

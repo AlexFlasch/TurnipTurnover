@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 
 // contexts
 import AuthContext from '../../contexts/auth';
 
 // gql queries
-import { query as displayNameQuery } from '../../gql/queries/displayNameExists';
-import { mutation as createUserMutation } from '../../gql/mutations/addUser';
+import displayNameQuery from '../../gql/queries/displayNameExists';
 
 // helper functions
 import { isValidEmail, isValidPassword } from '../../utils/validation-fns';
@@ -17,7 +16,7 @@ import Input from '../input/Input';
 import Button from '../button/Button';
 
 const RegisterForm = props => {
-  const { user, registerUser } = useContext(AuthContext);
+  const { registerUser } = useContext(AuthContext);
 
   const [emailValue, setEmailValue] = useState('');
   const [displayNameValue, setDisplayNameValue] = useState('');
@@ -104,25 +103,20 @@ const RegisterForm = props => {
     setFormIsValid(valid);
   }, [emailIsValid, passwordIsValid, confirmPasswordIsValid]);
 
-  const [createUser, { called: createUserCalled }] = useMutation(
-    createUserMutation,
-    {
-      onCompleted: props.closeModal,
-    },
-  );
-  const [registrationSuccessful, setRegistrationSuccessful] = useState(false);
   const [registrationError, setRegistrationError] = useState(undefined);
   const registerWithEmail = async event => {
-    if (event) {
+    if (event && formIsValid) {
+      event.stopPropagation();
       event.preventDefault();
-    }
 
-    if (formIsValid) {
       const error = await registerUser(
         emailValue,
         displayNameValue,
         passwordValue,
       );
+
+      console.log('registering');
+
       if (error) {
         switch (error.code) {
           case 'auth/email-already-in-use':
@@ -138,31 +132,11 @@ const RegisterForm = props => {
         }
       } else {
         setRegistrationError(undefined);
-        setRegistrationSuccessful(true);
+        // pop up "Registration successful, you're now logged in!" toast here
+        props.closeModal();
       }
     }
   };
-
-  // this useEffect ensures the user is created in the Hasura DB once firebase has returned
-  // the user that was created during registration
-  useEffect(() => {
-    if (!createUserCalled && registrationSuccessful && user && user.uid) {
-      console.log('attempting to create user with: ', {
-        uuid: user.uid,
-        displayName: displayNameValue,
-      });
-      createUser({
-        variables: { uuid: user.uid, displayName: displayNameValue },
-      });
-    }
-  }, [
-    registrationSuccessful,
-    user,
-    props.closeModal,
-    createUser,
-    createUserCalled,
-    displayNameValue,
-  ]);
 
   const formError = (
     <div className="form-error">

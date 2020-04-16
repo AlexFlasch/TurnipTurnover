@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/react-hooks';
 import subDays from 'date-fns/subDays';
 import formatISO from 'date-fns/formatISO';
 
-import { mutation } from '../../../../gql/mutations/addUserPriceLog';
+import addUserPriceLog from '../../../../gql/mutations/addUserPriceLog';
 
 import { formReducer, formInitialState } from './state';
 import {
@@ -29,7 +29,7 @@ const PriceLogForm = props => {
     user: { id: userId },
   } = useContext(AuthContext);
 
-  const [addUserPriceLog] = useMutation(mutation);
+  const [addPriceLog] = useMutation(addUserPriceLog);
 
   const [state, dispatch] = useReducer(formReducer, formInitialState);
 
@@ -60,7 +60,7 @@ const PriceLogForm = props => {
         dateTime: formatISO(state.datetime),
       };
 
-      addUserPriceLog({
+      addPriceLog({
         variables: {
           userId,
           ...newLog,

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const subscription = gql`
+export default gql`
   subscription getTopCurrentPriceLogs($since: timestamptz!) {
     PriceLog(
       order_by: { price: desc }

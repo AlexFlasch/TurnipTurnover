@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSubscription } from '@apollo/react-hooks';
 import setHours from 'date-fns/setHours';
 import getHours from 'date-fns/getHours';
 import setMinutes from 'date-fns/setMinutes';
-import formatISO from 'date-fns/formatISO';
 import parseISO from 'date-fns/parseISO';
 
 import { mdy12hTzDatetimeFormat } from '../../utils/i18n-formats';
 
-import { subscription } from '../../gql/subscriptions/getTopCurrentPrices';
+import getTopCurrentPrices from '../../gql/subscriptions/getTopCurrentPrices';
 
 import PaginatedGrid from '../../components/grid/PaginatedGrid';
 
@@ -50,7 +49,7 @@ const HomePage = props => {
     }
   };
 
-  const { data, loading } = useSubscription(subscription, {
+  useSubscription(getTopCurrentPrices, {
     variables: { since: getSinceComparisonTimestamp() },
     onSubscriptionData: createRowsFromSubscription,
   });

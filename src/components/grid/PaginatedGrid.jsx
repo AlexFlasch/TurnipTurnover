@@ -33,7 +33,7 @@ const PaginatedGrid = props => {
 
   useEffect(() => {
     setPageSize(props.pageSize);
-  }, [props.pageSize]);
+  }, [setPageSize, props.pageSize]);
 
   return (
     <StyledPaginatedGrid>
