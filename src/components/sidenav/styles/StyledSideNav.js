@@ -31,9 +31,13 @@ export default styled(motion.nav)`
     height: 100%;
   }
 
+  .mobile-menu {
+    display: none;
+  }
+
   ${palette.mobile} {
     .mobile-menu {
-      display: none;
+      display: block;
     }
   }
 `;
