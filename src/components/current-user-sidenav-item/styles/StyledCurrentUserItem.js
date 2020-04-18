@@ -25,7 +25,7 @@ export default styled.div`
     cursor: pointer;
 
     height: ${palette.scale(1)};
-    width: 100%;
+    width: ${palette.scale(9)};
     color: #000;
     opacity: 0.6;
     text-decoration: none;
