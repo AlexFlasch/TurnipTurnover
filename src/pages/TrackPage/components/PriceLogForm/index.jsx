@@ -25,9 +25,8 @@ import StyledPriceLogForm from './styles/StyledPriceLogForm';
 
 // actual PriceLogForm component
 const PriceLogForm = props => {
-  const {
-    user: { id: userId },
-  } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const userId = user?.id;
 
   const [addPriceLog] = useMutation(addUserPriceLog);
 

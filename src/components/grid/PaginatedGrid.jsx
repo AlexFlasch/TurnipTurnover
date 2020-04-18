@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTable, usePagination } from 'react-table';
 
+import StyledGridWrapper from './styles/StyledGridWrapper';
 import StyledTable from './styles/StyledTable';
 import StyledPaginatedGrid from './styles/StyledPaginatedGrid';
 
@@ -61,7 +62,7 @@ const PaginatedGrid = props => {
 
   const createGrid = () => {
     return (
-      <>
+      <StyledGridWrapper>
         <StyledTable {...getTableProps()} paginated={true}>
           <thead>{createHeaders()}</thead>
           <tbody {...getTableBodyProps()}>{createRows()}</tbody>
@@ -76,7 +77,7 @@ const PaginatedGrid = props => {
           pageOptions={pageOptions}
           gotoPage={gotoPage}
         />
-      </>
+      </StyledGridWrapper>
     );
   };
 

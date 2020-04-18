@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-export default styled.form`
-  margin: 25px 0;
+import palette from '../../../../../theme-palette';
 
+export default styled.form`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: minmax(100px, auto);
@@ -35,5 +35,14 @@ export default styled.form`
 
   .submit-btn {
     grid-column: 3 / span 2;
+  }
+
+  ${palette.mobile} {
+    & {
+      display: flex;
+      flex-direction: column;
+
+      align-items: stretch;
+    }
   }
 `;

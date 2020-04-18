@@ -13,6 +13,7 @@ export default styled(motion.input)`
   height: 5vh;
   width: 100%;
   font-size: 3vh;
+  font-family: ${palette.font};
 
   outline: none;
 

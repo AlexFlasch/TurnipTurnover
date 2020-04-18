@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import palette from '../../../theme-palette';
 
 export default styled(motion.nav)`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 75px;
