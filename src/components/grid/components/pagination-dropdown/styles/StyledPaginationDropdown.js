@@ -4,7 +4,7 @@ export default longestOption => ({
   container: (provided, state) => ({
     ...provided,
     margin: 0,
-    height: '40px',
+    height: palette.scale(3),
     fontSize: '1em',
     display: 'inline-block',
   }),
@@ -20,7 +20,7 @@ export default longestOption => ({
     }
     return {
       ...provided,
-      height: '40px',
+      height: palette.scale(3),
       backgroundColor: palette.transparent,
       color: palette.uiLight,
       border: 0,

@@ -4,8 +4,8 @@ export default {
   container: (provided, state) => ({
     ...provided,
     margin: '10px 0',
-    height: '5vh',
-    fontSize: '3vh',
+    height: palette.scale(2),
+    fontSize: palette.scale(1),
   }),
   control: (provided, state) => {
     let borderColor;
@@ -51,7 +51,8 @@ export default {
   indicatorSeparator: (provided, state) => ({
     ...provided,
     alignSelf: 'center',
-    height: '40%',
+    backgroundColor: palette.uiDarker,
+    height: '80%',
   }),
   menu: (provided, state) => ({
     ...provided,

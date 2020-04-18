@@ -22,6 +22,7 @@
     "graphql": "^15.0.0",
     "graphql-subscriptions": "^1.1.0",
     "graphql-tag": "^2.10.3",
+    "polished": "^3.5.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-datepicker": "^2.14.1",

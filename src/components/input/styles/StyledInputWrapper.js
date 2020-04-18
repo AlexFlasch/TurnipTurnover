@@ -6,13 +6,13 @@ import palette from '../../../theme-palette';
 export default styled(motion.div)`
   position: relative;
 
-  margin: 3.5vh 0;
+  margin: ${palette.scale(1)} 0;
 
   .validation-msg {
     position: absolute;
-    bottom: -1.25em;
+    bottom: -${palette.scale(1.5)};
     left: 0;
-    font-size: 0.75em;
+    font-size: ${palette.scale(-1)};
 
     &.valid {
       color: ${palette.accentGreen};

@@ -8,8 +8,8 @@ export default styled(motion.label)`
   top: 0;
   left: 0;
 
-  font-size: 3vh;
-  line-height: 5vh;
+  font-size: ${palette.scale(1)};
+  line-height: ${palette.scale(2)};
 
   color: ${palette.uiLight};
 

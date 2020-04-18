@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSubscription } from '@apollo/react-hooks';
 import setHours from 'date-fns/setHours';
 import getHours from 'date-fns/getHours';
 import setMinutes from 'date-fns/setMinutes';
-import formatISO from 'date-fns/formatISO';
 import parseISO from 'date-fns/parseISO';
 
 import { mdy12hTzDatetimeFormat } from '../../utils/i18n-formats';
 
-import { subscription } from '../../gql/subscriptions/getTopCurrentPrices';
+import getTopCurrentPrices from '../../gql/subscriptions/getTopCurrentPrices';
 
+import PageWrapper from '../../components/page-wrapper/PageWrapper';
+import Card from '../../components/card/Card';
 import PaginatedGrid from '../../components/grid/PaginatedGrid';
 
 const HomePage = props => {
@@ -50,7 +51,7 @@ const HomePage = props => {
     }
   };
 
-  const { data, loading } = useSubscription(subscription, {
+  useSubscription(getTopCurrentPrices, {
     variables: { since: getSinceComparisonTimestamp() },
     onSubscriptionData: createRowsFromSubscription,
   });
@@ -61,7 +62,14 @@ const HomePage = props => {
     { header: 'Time of Log', accessor: 'datetime' },
   ];
 
-  return <PaginatedGrid columns={columns} data={rows} />;
+  return (
+    <PageWrapper>
+      <Card>
+        <h1>Current Top Prices</h1>
+        <PaginatedGrid columns={columns} data={rows} />
+      </Card>
+    </PageWrapper>
+  );
 };
 
 export default HomePage;

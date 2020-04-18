@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const mutation = gql`
+export default gql`
   mutation addUserPriceLog(
     $userId: Int!
     $price: Int!

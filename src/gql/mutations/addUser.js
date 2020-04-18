@@ -1,9 +1,10 @@
 import gql from 'graphql-tag';
 
-export const mutation = gql`
+export default gql`
   mutation addUser($uuid: String!, $displayName: String!) {
     insert_User(objects: { uuid: $uuid, displayName: $displayName }) {
       returning {
+        id
         uuid
         displayName
       }

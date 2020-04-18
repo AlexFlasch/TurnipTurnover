@@ -50,15 +50,20 @@ const SignInForm = props => {
 
   const [signInError, setSignInError] = useState(undefined);
   const signInWithEmail = async event => {
-    if (event) {
+    if (event && formIsValid) {
+      event.stopPropagation();
       event.preventDefault();
-    }
 
-    if (formIsValid) {
+      console.log('signing in');
+
       const error = await signInUser(emailValue, passwordValue);
 
       if (error) {
         switch (error.code) {
+          case 'auth/user-not-found':
+            setSignInError('No registered user associated with this email.');
+            break;
+
           case 'auth/wrong-password':
             setSignInError('Incorrect password.');
             break;

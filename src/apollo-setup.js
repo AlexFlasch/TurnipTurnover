@@ -15,7 +15,7 @@ const httpLink = new HttpLink({
 
 // set up websocket link for GraphQL subscriptions
 const wsLink = new WebSocketLink({
-  uri: `ws://${GQL_ENDPOINT}`,
+  uri: `wss://${GQL_ENDPOINT}`,
   options: {
     reconnect: true,
   },
@@ -50,7 +50,7 @@ const client = new ApolloClient({
       }
 
       if (networkError) {
-        console.log(`[Network error]: ${networkError}`);
+        console.log(`[Network error]: ${JSON.stringify(networkError)}`);
       }
     }),
     link,

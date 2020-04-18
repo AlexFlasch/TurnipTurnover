@@ -25,12 +25,13 @@ const StyledAppContainer = styled.main`
 
   background-color: ${palette.bg};
 
-  overflow-y: hidden;
+  overflow-y: auto;
+
+  font-family: ${palette.font};
 `;
 
 const StyledContentContainer = styled.div`
-  margin-left: 75px;
-  padding: 15px;
+  margin-left: ${palette.scale(3.5)};
   min-height: 100vh;
 
   overflow-y: auto;
