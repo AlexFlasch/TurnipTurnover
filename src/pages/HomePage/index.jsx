@@ -9,6 +9,8 @@ import { mdy12hTzDatetimeFormat } from '../../utils/i18n-formats';
 
 import getTopCurrentPrices from '../../gql/subscriptions/getTopCurrentPrices';
 
+import PageWrapper from '../../components/page-wrapper/PageWrapper';
+import Card from '../../components/card/Card';
 import PaginatedGrid from '../../components/grid/PaginatedGrid';
 
 const HomePage = props => {
@@ -60,7 +62,14 @@ const HomePage = props => {
     { header: 'Time of Log', accessor: 'datetime' },
   ];
 
-  return <PaginatedGrid columns={columns} data={rows} />;
+  return (
+    <PageWrapper>
+      <Card>
+        <h1>Current Top Prices</h1>
+        <PaginatedGrid columns={columns} data={rows} />
+      </Card>
+    </PageWrapper>
+  );
 };
 
 export default HomePage;

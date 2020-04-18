@@ -11,7 +11,7 @@ export default styled(motion.button)`
   border-bottom-color: ${palette.uiLight};
   border-bottom-style: solid;
 
-  height: 40px;
+  height: ${palette.scale(3)};
   width: auto;
 
   &.disabled {

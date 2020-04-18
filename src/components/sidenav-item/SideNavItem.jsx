@@ -7,8 +7,8 @@ import StyledItemIcon from './styles/StyledItemIcon';
 
 const SideNavItem = props => (
   <StyledSideNavItem>
-    <Link to={props.to}>
-      <StyledItemIcon className={`lnr ${props.icon}`}></StyledItemIcon>
+    <Link to={props.to} onClick={props.handleNavClick}>
+      <StyledItemIcon className={`lnr ${props.icon}`} />
       <span>{props.text}</span>
     </Link>
   </StyledSideNavItem>

@@ -69,7 +69,7 @@ export default Modal.styled`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 500px;
+    width: 100%;
     padding: 25px;
     border-radius: 5px;
     color: ${palette.uiLight};
@@ -104,6 +104,12 @@ export default Modal.styled`
 
     &.error {
       color: ${palette.error};
+    }
+  }
+
+  ${palette.mobile} {
+    & {
+      width: 100vw;
     }
   }
 `;

@@ -9,9 +9,9 @@ export default styled.div`
 
   label {
     position: absolute;
-    top: -1.25vh;
+    top: -${palette.scale(1)};
     left: 0;
-    font-size: 1.5vh;
+    font-size: ${palette.scale(0)};
     color: ${palette.uiLight};
     opacity: ${props => (props.disabled ? 0.3 : 1)};
   }

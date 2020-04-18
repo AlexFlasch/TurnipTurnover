@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 
-export default styled.figure`
-  margin: 10px;
-  padding: 10px;
-  min-width: 55px;
-  height: 55px;
+import palette from '../../../theme-palette';
 
-  font-size: 35px;
+export default styled.figure`
+  min-width: ${palette.scale(1)};
+  height: ${palette.scale(1)};
+
+  font-size: ${palette.scale(1)};
+  margin: 0;
+  padding: ${palette.scale(-5)};
 
   color: #000;
   opacity: 0.6;

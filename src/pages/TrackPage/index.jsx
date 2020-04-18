@@ -8,16 +8,14 @@ import AuthContext from '../../contexts/auth';
 
 import getPriceLogsForUser from '../../gql/queries/getPriceLogsForUser';
 
+import PageWrapper from '../../components/page-wrapper/PageWrapper';
 import Card from '../../components/card/Card';
 import PaginatedGrid from '../../components/grid/PaginatedGrid';
 import PriceLogForm from './components/PriceLogForm';
 
-import StyledTrackPageWrapper from './styles/StyledTrackPageWrapper';
-
 const TrackPage = props => {
-  const {
-    user: { id: userId },
-  } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const userId = user?.id;
 
   const { data, loading } = useQuery(getPriceLogsForUser, {
     variables: { userId },
@@ -73,12 +71,15 @@ const TrackPage = props => {
   const combinedRows = [...createRowsFromQuery(), ...submittedRows];
 
   return (
-    <StyledTrackPageWrapper>
-      <PaginatedGrid columns={columns} data={combinedRows} />
+    <PageWrapper>
+      <Card noHorizontalPadding={true}>
+        <h1 className="card-title">Your Price Logs</h1>
+        <PaginatedGrid columns={columns} data={combinedRows} />
+      </Card>
       <Card>
         <PriceLogForm handleSubmit={addSubmittedLog} />
       </Card>
-    </StyledTrackPageWrapper>
+    </PageWrapper>
   );
 };
 

@@ -96,7 +96,7 @@ const isSignedIn =
 
 const getUser = () => {
   try {
-    JSON.parse(localStorage.getItem('user'));
+    return JSON.parse(localStorage.getItem('user'));
   } catch (e) {
     console.log(
       "couldn't parse user session from local storage. value is: ",
