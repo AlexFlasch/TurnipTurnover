@@ -27,6 +27,8 @@ const Dropdown = props => {
         options={props.options}
         styles={StyledDropdown}
         components={{ DropdownIndicator: CustomDropdownIndicator }}
+        menuPosition="fixed"
+        closeMenuOnScroll={true}
       />
     </StyledDropdownContainer>
   );

@@ -61,18 +61,18 @@ const Input = props => {
   // animation properties
   const labelVariants = {
     active: {
-      y: '-3.25vh',
-      fontSize: '1.5vh',
+      y: `-${palette.scale(1.5)}`,
+      fontSize: palette.scale(0),
       opacity: 1,
     },
     inactive: {
-      y: 0,
-      fontSize: '3vh',
+      y: '0em',
+      fontSize: palette.scale(1),
       opacity: 0.5,
     },
     disabled: {
       y: 0,
-      fontSize: '3vh',
+      fontSize: palette.scale(1),
       opacity: 0.3,
     },
   };

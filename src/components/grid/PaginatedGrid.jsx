@@ -62,11 +62,13 @@ const PaginatedGrid = props => {
 
   const createGrid = () => {
     return (
-      <StyledGridWrapper>
-        <StyledTable {...getTableProps()} paginated={true}>
-          <thead>{createHeaders()}</thead>
-          <tbody {...getTableBodyProps()}>{createRows()}</tbody>
-        </StyledTable>
+      <>
+        <StyledGridWrapper>
+          <StyledTable {...getTableProps()} paginated={true}>
+            <thead>{createHeaders()}</thead>
+            <tbody {...getTableBodyProps()}>{createRows()}</tbody>
+          </StyledTable>
+        </StyledGridWrapper>
         <GridPaginator
           currentPage={pageIndex}
           pageCount={pageCount}
@@ -77,7 +79,7 @@ const PaginatedGrid = props => {
           pageOptions={pageOptions}
           gotoPage={gotoPage}
         />
-      </StyledGridWrapper>
+      </>
     );
   };
 

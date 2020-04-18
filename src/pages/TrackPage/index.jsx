@@ -72,7 +72,7 @@ const TrackPage = props => {
 
   return (
     <PageWrapper>
-      <Card noPadding={true}>
+      <Card noHorizontalPadding={true}>
         <h1 className="card-title">Your Price Logs</h1>
         <PaginatedGrid columns={columns} data={combinedRows} />
       </Card>

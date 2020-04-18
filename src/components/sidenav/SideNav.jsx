@@ -2,6 +2,8 @@ import React, { cloneElement, useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 
+import palette from '../../theme-palette';
+
 // styled components
 import StyledSideNav from './styles/StyledSideNav';
 import StyledSideNavItem from '../sidenav-item/styles/StyledSideNavItem';
@@ -12,11 +14,11 @@ const SideNav = props => {
 
   const variants = {
     closed: {
-      width: '75px',
+      width: palette.scale(3.5),
       boxShadow: '0 0 0 rgba(0,0,0,0), 0 0 0 rgba(0,0,0,0)',
     },
     open: {
-      width: '300px',
+      width: palette.scale(9),
       boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
     },
   };
@@ -36,7 +38,7 @@ const SideNav = props => {
   return (
     <StyledSideNav
       whileHover={{
-        width: '300px',
+        width: palette.scale(9),
         boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
       }}
       variants={variants}

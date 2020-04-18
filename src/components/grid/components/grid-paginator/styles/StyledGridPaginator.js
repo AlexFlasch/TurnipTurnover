@@ -4,8 +4,11 @@ import palette from '../../../../../theme-palette';
 
 export default styled.div`
   display: grid;
-  grid-template-columns: 40px 40px auto 40px 40px;
+  grid-template-columns: ${palette.scale(3)} ${palette.scale(3)} auto ${palette.scale(
+      3,
+    )} ${palette.scale(3)};
   align-items: center;
+  height: ${palette.scale(3)};
 
   border-top: 1px solid ${palette.uiDark};
 
@@ -15,7 +18,7 @@ export default styled.div`
 
   .page-select {
     justify-self: center;
-    height: 40px;
+    align-self: flex-end;
 
     p {
       display: inline-block;

@@ -7,10 +7,11 @@ export default styled.div`
   color: ${palette.uiLight};
   box-shadow: ${palette.cardShadow};
   border-radius: 5px;
-  padding: ${props => (props.noPadding ? 0 : '15px')};
+  padding: ${props => (props.noHorizontalPadding ? '15px 0' : '15px')};
   margin: 15px 0;
 
   .card-title {
-    padding: ${props => (props.noPadding ? '5px' : 0)};
+    padding: ${props => (props.noHorizontalPadding ? '0 15px' : 0)};
+    margin: 0;
   }
 `;

@@ -10,9 +10,9 @@ export default styled(motion.input)`
 
   padding: 0;
   padding-left: 5px;
-  height: 5vh;
+  height: ${palette.scale(2)};
   width: 100%;
-  font-size: 3vh;
+  font-size: ${palette.scale(1)};
   font-family: ${palette.font};
 
   outline: none;

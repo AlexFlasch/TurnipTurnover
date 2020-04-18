@@ -31,7 +31,7 @@ const StyledAppContainer = styled.main`
 `;
 
 const StyledContentContainer = styled.div`
-  margin-left: 75px;
+  margin-left: ${palette.scale(3.5)};
   min-height: 100vh;
 
   overflow-y: auto;

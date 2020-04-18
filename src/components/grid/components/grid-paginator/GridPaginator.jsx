@@ -33,6 +33,7 @@ const GridPaginator = props => {
           handleChange={option => props.gotoPage(option.value)}
           options={dropdownValues}
           longestOptionWidth={longestOptionDigits}
+          menuPosition="fixed"
         />
       </div>
       <PaginationButton
