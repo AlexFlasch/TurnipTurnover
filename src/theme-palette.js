@@ -10,4 +10,6 @@ export default {
   warning: 'rgba(255, 217, 122, 1)',
   error: 'rgba(255, 125, 122, 1)',
   cardShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
+  // media query for mobile to be used across the site where needed
+  mobile: '@media (min-width: 800px)',
 };

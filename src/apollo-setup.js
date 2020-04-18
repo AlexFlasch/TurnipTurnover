@@ -50,7 +50,7 @@ const client = new ApolloClient({
       }
 
       if (networkError) {
-        console.log(`[Network error]: ${networkError}`);
+        console.log(`[Network error]: ${JSON.stringify(networkError)}`);
       }
     }),
     link,

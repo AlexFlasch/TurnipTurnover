@@ -6,9 +6,18 @@ export default styled.li`
 
   opacity: 0.8;
 
-  a {
+  a,
+  button {
     display: flex;
     align-content: center;
+    justify-content: flex-start;
+
+    padding: 0;
+
+    border: none;
+    background: none;
+
+    cursor: pointer;
 
     height: 75px;
     width: 100%;

@@ -30,4 +30,10 @@ export default styled(motion.nav)`
     padding: 0;
     height: 100%;
   }
+
+  ${palette.mobile} {
+    .mobile-menu {
+      display: none;
+    }
+  }
 `;
