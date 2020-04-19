@@ -132,7 +132,6 @@ const RegisterForm = props => {
         }
       } else {
         setRegistrationError(undefined);
-        // pop up "Registration successful, you're now logged in!" toast here
         props.closeModal();
       }
     }
