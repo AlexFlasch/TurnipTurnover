@@ -31,7 +31,6 @@ export default styled.li`
     border: 0;
 
     span {
-      margin: auto 0;
       white-space: pre;
       line-height: ${palette.scale(2)};
       padding: ${palette.scale(-5)};
