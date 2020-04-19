@@ -1,8 +1,10 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import getUserData from '../gql/queries/getUserData';
 import addUser from '../gql/mutations/addUser';
+
+import ToastContext from './toast';
 
 // firebase setup
 const firebaseConfig = {
@@ -16,79 +18,6 @@ const firebaseConfig = {
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
-
-const signInUser = (dispatch, client) => async (email, password) => {
-  try {
-    await firebaseApp.auth().signInWithEmailAndPassword(email, password);
-    const fbUser = firebaseApp.auth().currentUser;
-
-    // get user data associated with the firebase uid
-    const { data } = await client.query({
-      query: getUserData,
-      variables: { uuid: fbUser.uid },
-    });
-
-    const user = data?.User?.[0];
-
-    // update the auth reducer with the user object retrieved from Hasura
-    if (user) {
-      dispatch({ type: 'userSignIn', payload: user });
-
-      // add the user to localStorage to persist user sessions
-      localStorage.setItem('user', JSON.stringify(user));
-    }
-  } catch (e) {
-    return e;
-  }
-};
-
-const signOutUser = dispatch => async () => {
-  try {
-    await firebaseApp.auth().signOut();
-
-    // remove user from localStorage to end their session
-    localStorage.removeItem('user');
-
-    dispatch({ type: 'userSignOut', payload: null });
-  } catch (e) {
-    return e;
-  }
-};
-
-const registerUser = (dispatch, client) => async (
-  email,
-  displayName,
-  password,
-) => {
-  try {
-    await firebaseApp.auth().createUserWithEmailAndPassword(email, password);
-    const fbUser = firebaseApp.auth().currentUser;
-
-    const { data } = await client.mutate({
-      mutation: addUser,
-      variables: { uuid: fbUser.uid, displayName },
-    });
-
-    const user = data?.insert_User?.returning?.[0];
-
-    if (user) {
-      dispatch({ type: 'userSignIn', payload: user });
-
-      // add the user to localStorage to persist user sessions
-      localStorage.setItem('user', JSON.stringify(user));
-    }
-  } catch (e) {
-    return e;
-  }
-};
-
-const resetPassword = async email => {
-  try {
-    await firebaseApp.auth().sendPasswordResetEmail(email);
-  } catch (e) {
-    return e;
-  }
-};
 
 const isSignedIn =
   (firebaseApp.auth().currentUser ||
@@ -139,13 +68,104 @@ const reducer = (state, action) => {
 };
 
 export const AuthProvider = props => {
+  const { sendToast } = useContext(ToastContext);
+
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const { gqlClient: client } = props;
+
+  const signInUser = async (email, password) => {
+    try {
+      await firebaseApp.auth().signInWithEmailAndPassword(email, password);
+      const fbUser = firebaseApp.auth().currentUser;
+
+      // get user data associated with the firebase uid
+      const { data } = await client.query({
+        query: getUserData,
+        variables: { uuid: fbUser.uid },
+      });
+
+      const user = data?.User?.[0];
+
+      // update the auth reducer with the user object retrieved from Hasura
+      if (user) {
+        dispatch({ type: 'userSignIn', payload: user });
+
+        // add the user to localStorage to persist user sessions
+        localStorage.setItem('user', JSON.stringify(user));
+
+        sendToast(
+          `You've successfully signed in as ${user.displayName}!`,
+          'success',
+        );
+      }
+    } catch (e) {
+      return e;
+    }
+  };
+
+  const signOutUser = async () => {
+    try {
+      await firebaseApp.auth().signOut();
+
+      // remove user from localStorage to end their session
+      localStorage.removeItem('user');
+
+      dispatch({ type: 'userSignOut', payload: null });
+
+      sendToast("You've been successfully signed out.", 'success');
+    } catch (e) {
+      return e;
+    }
+  };
+
+  const registerUser = async (email, displayName, password) => {
+    try {
+      await firebaseApp.auth().createUserWithEmailAndPassword(email, password);
+      const fbUser = firebaseApp.auth().currentUser;
+
+      const { data } = await client.mutate({
+        mutation: addUser,
+        variables: { uuid: fbUser.uid, displayName },
+      });
+
+      const user = data?.insert_User?.returning?.[0];
+
+      if (user) {
+        dispatch({ type: 'userSignIn', payload: user });
+
+        // add the user to localStorage to persist user sessions
+        localStorage.setItem('user', JSON.stringify(user));
+
+        sendToast(
+          `Registration successful. You're now logged in as ${
+            user.displayName
+          }!`,
+          'success',
+        );
+      }
+    } catch (e) {
+      return e;
+    }
+  };
+
+  const resetPassword = async email => {
+    try {
+      await firebaseApp.auth().sendPasswordResetEmail(email);
+      sendToast(
+        `Password reset email sent. Please check ${email} to proceed.`,
+        'success',
+      );
+    } catch (e) {
+      return e;
+    }
+  };
 
   const providerValue = {
     ...state,
-    signInUser: signInUser(dispatch, props.gqlClient),
-    registerUser: registerUser(dispatch, props.gqlClient),
-    signOutUser: signOutUser(dispatch),
+    signInUser,
+    registerUser,
+    signOutUser,
     resetPassword,
   };
 
