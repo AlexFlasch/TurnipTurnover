@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { motion } from 'framer-motion';
 
-import palette from '../../../theme-palette';
+import palette from '../../../../theme-palette';
 
 export default styled(motion.label)`
   position: absolute;

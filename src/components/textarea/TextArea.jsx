@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import StyledInputWrapper from './styles/StyledInputWrapper';
-import StyledInput from './styles/StyledInput';
+import palette from '../../theme-palette';
 
 import Label from '../field-subcomponents/Label';
 import Underline from '../field-subcomponents/Underline';
 
-const Input = props => {
+import StyledTextAreaWrapper from './styles/StyledTextAreaWrapper';
+import StyledTextArea from './styles/StyledTextArea';
+
+const TextArea = props => {
   const [isActive, setIsActive] = useState(false);
   const [value, setValue] = useState(props.value);
   const [isPristine, setIsPristine] = useState(true);
@@ -29,19 +31,23 @@ const Input = props => {
     }
   }, [props.isValid]);
 
+  useEffect(() => {
+    setValue(props.value);
+  }, [props.value]);
+
   return (
-    <StyledInputWrapper className={props.className}>
+    <StyledTextAreaWrapper>
       <Label
         isActive={isActive}
         isPristine={isPristine}
+        isValid={props.isValid}
         disabled={props.disabled}
         inputValue={value}
       >
         {props.label}
       </Label>
-      <StyledInput
+      <StyledTextArea
         className={validationClass}
-        type={props.type}
         onChange={event => {
           if (isPristine) {
             setIsPristine(false);
@@ -49,46 +55,38 @@ const Input = props => {
           props.handleChange(event.target.value);
           setValue(event.target.value);
         }}
-        value={value}
-        onClick={props.onClick}
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(false)}
         autoComplete={props.autoComplete}
-        disabled={props.disabled}
+        value={value}
       />
       <Underline
         isActive={isActive}
         isPristine={isPristine}
+        isValid={props.isValid}
         disabled={props.disabled}
         validationStatus={validationClass}
       />
-      {isPristine ? null : (
-        <span className={`validation-msg ${validationClass}`}>
-          {props.validationMessage}
-        </span>
-      )}
-    </StyledInputWrapper>
+    </StyledTextAreaWrapper>
   );
 };
 
-Input.propTypes = {
+TextArea.propTypes = {
+  value: PropTypes.string,
+  maxHeight: PropTypes.string,
   label: PropTypes.string,
-  handleChange: PropTypes.func,
-  onClick: PropTypes.func,
-  type: PropTypes.oneOf(['text', 'password']),
-  value: PropTypes.any,
   autoComplete: PropTypes.string,
-  disabled: PropTypes.bool,
-  validationMessage: PropTypes.string,
   isValid: PropTypes.bool,
+  disabled: PropTypes.bool,
+  handleChange: PropTypes.func,
 };
 
-Input.defaultProps = {
-  handleChange: () => {},
-  type: 'text',
+TextArea.defaultProps = {
   value: '',
-  autoComplete: undefined,
+  maxHeight: palette.scale(10),
+  handleChange: () => {},
   disabled: false,
+  autoComplete: undefined,
 };
 
-export default Input;
+export default TextArea;

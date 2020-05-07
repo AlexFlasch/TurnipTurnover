@@ -84,7 +84,7 @@ const PaginatedGrid = props => {
   };
 
   const createEmptyDisplay = () => {
-    return <p className="empty-display">Nothing to display!</p>;
+    return <p className="empty-display">{props.noContentText}</p>;
   };
 
   return (
@@ -98,10 +98,12 @@ PaginatedGrid.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageSize: PropTypes.number,
+  noContentText: PropTypes.string,
 };
 
 PaginatedGrid.defaultProps = {
   pageSize: 15,
+  noContentText: 'Nothing to display!',
 };
 
 export default PaginatedGrid;

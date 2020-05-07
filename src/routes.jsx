@@ -13,6 +13,7 @@ import AuthContext from './contexts/auth';
 
 import HomePage from './pages/HomePage';
 import TrackPage from './pages/TrackPage';
+import HostPage from './pages/HostPage';
 import AccountPage from './pages/AccountPage';
 
 import SideNav from './components/sidenav/SideNav';
@@ -69,6 +70,11 @@ const Routes = () => {
                 icon="lnr-pencil"
                 text="Log Your Prices"
               />
+              <SideNavItem
+                to="/host"
+                icon="lnr-earth"
+                text="Open Your Island"
+              />
             </>
           ) : null}
         </SideNav>
@@ -79,6 +85,9 @@ const Routes = () => {
             </Route>
             <AccountRoute path="/track">
               <TrackPage />
+            </AccountRoute>
+            <AccountRoute path="/host">
+              <HostPage />
             </AccountRoute>
             <AccountRoute path="/account">
               <AccountPage />

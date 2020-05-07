@@ -4,4 +4,6 @@ export const isValidEmail = value => emailPattern.test(value);
 
 export const isValidPassword = value => value.length >= 8;
 
+export const isValidDodoCode = value => /^[A-Za-z0-9]{5}$/.test(value);
+
 export const isNumeric = value => !/\D/.test(value);

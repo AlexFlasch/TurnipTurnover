@@ -6,7 +6,7 @@ import palette from '../../../theme-palette';
 export default styled(motion.div)`
   position: relative;
 
-  margin: ${palette.scale(2)} 0;
+  margin: ${palette.scale(1)} 0;
 
   .validation-msg {
     position: absolute;
