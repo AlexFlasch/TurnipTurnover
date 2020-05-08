@@ -15,7 +15,7 @@ export default styled(motion.div)`
     font-size: ${palette.scale(-1)};
 
     &.valid {
-      color: ${palette.accentLime};
+      color: ${palette.success};
     }
 
     &.invalid {

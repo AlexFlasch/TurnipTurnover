@@ -48,14 +48,18 @@ const AccountRoute = props => {
 };
 
 const Routes = () => {
-  const { user, isSignedIn } = useContext(AuthContext);
+  const { user, isSignedIn, isHosting } = useContext(AuthContext);
 
   const bottomItemIcon = isSignedIn ? 'lnr-user' : 'lnr-enter';
   const bottomItemText =
-    isSignedIn && user && user.displayName ? user.displayName : 'Sign in';
+    isSignedIn && user?.displayName ? user.displayName : 'Sign in';
   const bottomItem = (
     <CurrentUserItem icon={bottomItemIcon} text={bottomItemText} />
   );
+
+  console.log('user: ', user);
+
+  const hostPageIcon = user?.isHosting ? 'Host Management' : 'Open Your Island';
 
   return (
     <StyledAppContainer>
@@ -70,11 +74,7 @@ const Routes = () => {
                 icon="lnr-pencil"
                 text="Log Your Prices"
               />
-              <SideNavItem
-                to="/host"
-                icon="lnr-earth"
-                text="Open Your Island"
-              />
+              <SideNavItem to="/host" icon="lnr-earth" text={hostPageIcon} />
             </>
           ) : null}
         </SideNav>

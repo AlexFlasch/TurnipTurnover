@@ -35,4 +35,15 @@ export default styled(motion.div)`
       }
     }
   }
+
+  ${palette.mobile} {
+    .alert-icon {
+      display: inline;
+      padding: ${palette.scale(-5)};
+    }
+
+    .alert-text {
+      display: inline;
+    }
+  }
 `;

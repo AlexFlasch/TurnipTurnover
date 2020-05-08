@@ -25,16 +25,43 @@ const dismissToast = dispatch => uuid => {
   dispatch({ type: 'dismissToast', payload: uuid });
 };
 
-const sendToast = dispatch => (message, type, delay = 3000) => {
-  const uuid = createUuid();
+const VALID_LOCATIONS = [
+  'topLeft',
+  'top',
+  'topRight',
+  'right',
+  'bottomRight',
+  'bottom',
+  'bottomLeft',
+  'left',
+];
 
-  const autoDismiss = setTimeout(() => {
-    dismissToast(dispatch)(uuid);
-  }, delay);
+const sendToast = dispatch => (
+  message,
+  type,
+  location = 'bottom',
+  delay = 3000,
+  persistent = false,
+) => {
+  if (!VALID_LOCATIONS.includes(location)) {
+    console.warn(
+      'An invalid toast location was specified. Defaulting to `bottom`.\n Valid locations include:\n\t`topLeft`\n\t`top`\n\t`topRight`\n\t`right`\n\t`bottomRight`\n\t`bottom`\n\t`bottomLeft`\n\t`left`',
+    );
+    location = 'bottom';
+  }
+
+  const uuid = `${location}-${createUuid()}`;
+
+  const autoDismiss = !persistent
+    ? setTimeout(() => {
+        dismissToast(dispatch)(uuid);
+      }, delay)
+    : () => {};
 
   const toastObj = {
     uuid,
     message,
+    location,
     type,
     isDismissed: false,
     autoDismiss,
@@ -51,45 +78,61 @@ const toastReducer = (state, action) => {
     case 'sendToast':
       return {
         ...state,
-        toasts: [...state.toasts, payload],
+        toasts: {
+          ...state.toasts,
+          [payload.location]: [...state.toasts[payload.location], payload],
+        },
       };
 
     case 'manuallyDismissToast':
-      const manuallyDismissedToast = state.toasts.find(
-        toast => toast.uuid === payload,
-      );
+      const manuallyDismissedToastLocation = payload.split('-')[0];
+      const manuallyDismissedToast = state.toasts[
+        manuallyDismissedToastLocation
+      ].find(toast => toast.uuid === payload);
       clearTimeout(manuallyDismissedToast.autoDismiss);
+    // make use of fallthrough here.
+    // this allows the manual dismissal to function the same as a normal dismissal
+    // but also clears the auto-dismiss timeout to avoid errors
 
     case 'dismissToast':
-      const dismissedToastIndex = state.toasts.findIndex(
-        toast => toast.uuid === payload,
-      );
-      const dismissedToast = state.toasts[dismissedToastIndex];
+      const dismissedToastLocation = payload.split('-')[0];
+      const dismissedToastIndex = state.toasts[
+        dismissedToastLocation
+      ].findIndex(toast => toast.uuid === payload);
+      const dismissedToast =
+        state.toasts[dismissedToastLocation][dismissedToastIndex];
       dismissedToast.isDismissed = true;
 
       const afterDismiss = [
-        ...state.toasts.slice(0, dismissedToastIndex),
+        ...state.toasts[dismissedToastLocation].slice(0, dismissedToastIndex),
         dismissedToast,
-        ...state.toasts.slice(dismissedToastIndex + 1),
+        ...state.toasts[dismissedToastLocation].slice(dismissedToastIndex + 1),
       ];
 
       return {
         ...state,
-        toasts: afterDismiss,
+        toasts: {
+          ...state.toasts,
+          [dismissedToastLocation]: afterDismiss,
+        },
       };
 
     case 'deleteToast':
-      const deletedToastIndex = state.toasts.findIndex(
+      const deletedToastLocation = payload.split('-')[0];
+      const deletedToastIndex = state.toasts[deletedToastLocation].findIndex(
         toast => toast.uuid === payload,
       );
       const afterDelete = [
-        ...state.toasts.slice(0, deletedToastIndex),
-        ...state.toasts.slice(deletedToastIndex + 1),
+        ...state.toasts[deletedToastLocation].slice(0, deletedToastIndex),
+        ...state.toasts[deletedToastLocation].slice(deletedToastIndex + 1),
       ];
 
       return {
         ...state,
-        toasts: afterDelete,
+        toasts: {
+          ...state.toasts,
+          [deletedToastLocation]: afterDelete,
+        },
       };
 
     default:
@@ -98,7 +141,16 @@ const toastReducer = (state, action) => {
 };
 
 const initialState = {
-  toasts: [],
+  toasts: {
+    topLeft: [],
+    top: [],
+    topRight: [],
+    right: [],
+    bottomRight: [],
+    bottom: [],
+    bottomLeft: [],
+    left: [],
+  },
 };
 
 export const ToastProvider = props => {
@@ -114,27 +166,29 @@ export const ToastProvider = props => {
   return (
     <context.Provider value={providerValue}>
       {props.children}
-      <StyledToastContainer>
-        {state.toasts.map(toastObj => {
-          return (
-            <Toast
-              key={`toast-${toastObj.uuid}`}
-              onDismiss={() =>
-                dispatch({
-                  type: 'manuallyDismissToast',
-                  payload: toastObj.uuid,
-                })
-              }
-              onDelete={() =>
-                dispatch({ type: 'deleteToast', payload: toastObj.uuid })
-              }
-              isDismissed={toastObj.isDismissed}
-              message={toastObj.message}
-              type={toastObj.type}
-            />
-          );
-        })}
-      </StyledToastContainer>
+      {Object.keys(state.toasts).map(location => (
+        <StyledToastContainer key={location} location={location}>
+          {state.toasts[location].map(toastObj => {
+            return (
+              <Toast
+                key={`toast-${toastObj.uuid}`}
+                onDismiss={() =>
+                  dispatch({
+                    type: 'manuallyDismissToast',
+                    payload: toastObj.uuid,
+                  })
+                }
+                onDelete={() =>
+                  dispatch({ type: 'deleteToast', payload: toastObj.uuid })
+                }
+                isDismissed={toastObj.isDismissed}
+                message={toastObj.message}
+                type={toastObj.type}
+              />
+            );
+          })}
+        </StyledToastContainer>
+      ))}
     </context.Provider>
   );
 };

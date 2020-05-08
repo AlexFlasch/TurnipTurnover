@@ -9,6 +9,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 import { Link } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { generateCombination } from 'gfycat-style-urls';
+import formatISO from 'date-fns/formatISO';
 
 import AuthContext from '../../../../contexts/auth';
 import ToastContext from '../../../../contexts/toast';
@@ -66,7 +67,7 @@ const HostForm = props => {
     } else {
       setShowPriceAlert(true);
     }
-  }, [hasCurrentPrice]);
+  }, [hasCurrentPrice.current]);
 
   const submitHostForm = event => {
     if (event) {
@@ -90,13 +91,12 @@ const HostForm = props => {
             ...formValues,
             urlCode,
             hostId: userId,
+            createdAt: formatISO(new Date()),
           },
         });
       }
     }
   };
-
-  console.log('form reducer state: ', state);
 
   return (
     <form onSubmit={submitHostForm}>
@@ -167,7 +167,7 @@ const HostForm = props => {
         validationMessage={state.dodoCode.validationMsg}
       />
       <Button
-        disabled={!state.formIsValid && !showPriceAlert}
+        disabled={!state.formIsValid || showPriceAlert}
         text="Open Island"
         color="primary"
         type="submit"

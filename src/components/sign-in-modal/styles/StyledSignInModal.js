@@ -99,7 +99,7 @@ export default Modal.styled`
 
   .form-msg {
     &.success {
-      color: ${palette.accentLime};
+      color: ${palette.success};
     }
 
     &.error {

@@ -84,7 +84,7 @@ const MaskedInput = props => {
     },
     valid: {
       height: 3,
-      backgroundColor: palette.accentLime,
+      backgroundColor: palette.success,
     },
     invalid: {
       height: 3,

@@ -6,7 +6,7 @@ import StyledAlert from './styles/StyledAlert';
 const Alert = props => {
   const [alertIcon, setAlertIcon] = useState(props.icon);
 
-  const setDefaultIcon = useCallback(() => {
+  const setIcon = useCallback(() => {
     if (alertIcon === undefined && props.icon === undefined) {
       switch (props.type) {
         case 'primary':
@@ -39,8 +39,8 @@ const Alert = props => {
   }, [props.icon, props.type, alertIcon]);
 
   useEffect(() => {
-    setDefaultIcon();
-  }, [props.type, props.icon, setDefaultIcon]);
+    setIcon();
+  }, [props.type, props.icon, setIcon]);
 
   return (
     <StyledAlert type={props.type}>

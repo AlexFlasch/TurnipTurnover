@@ -1,4 +1,56 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
+const getStylesForLocation = location => {
+  switch (location) {
+    case 'topLeft':
+      return css`
+        flex-direction: column;
+        align-items: flex-start;
+      `;
+
+    case 'top':
+      return css`
+        flex-direction: column;
+        align-items: center;
+      `;
+
+    case 'topRight':
+      return css`
+        flex-direction: column;
+        align-items: flex-end;
+      `;
+
+    case 'right':
+      return css`
+        flex-direction: row-reverse;
+        align-items: center;
+      `;
+
+    case 'bottomRight':
+      return css`
+        flex-direction: column-reverse;
+        align-items: flex-end;
+      `;
+
+    case 'bottom':
+      return css`
+        flex-direction: column-reverse;
+        align-items: center;
+      `;
+
+    case 'bottomLeft':
+      return css`
+        flex-direction: column-reverse;
+        align-items: flex-start;
+      `;
+
+    case 'left':
+      return css`
+        flex-direction: row;
+        align-items: center;
+      `;
+  }
+};
 
 export default styled.div`
   position: fixed;
@@ -10,7 +62,6 @@ export default styled.div`
   pointer-events: none;
 
   display: flex;
-  flex-direction: column-reverse;
   justify-content: flex-start;
-  align-items: center;
+  ${props => getStylesForLocation(props.location)}
 `;

@@ -20,7 +20,11 @@ export default styled(motion.nav)`
   .nav-bg {
     height: 100%;
     width: 100%;
-    background-image: linear-gradient(-255deg, #a8ff78 0%, #78ffd6 100%);
+    background-image: linear-gradient(
+      -255deg,
+      ${palette.success} 0%,
+      ${palette.accentMint} 100%
+    );
     opacity: 0.7;
   }
 

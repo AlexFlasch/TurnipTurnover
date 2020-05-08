@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  mutation createSession(
+  mutation addHostSession(
     $dodoCode: String!
     $isBuySession: Boolean!
     $isSellSession: Boolean!
@@ -10,6 +10,7 @@ export default gql`
     $queueSize: Int!
     $urlCode: String!
     $hostId: Int!
+    $createdAt: timestamptz!
   ) {
     insert_Session(
       objects: {
@@ -21,6 +22,7 @@ export default gql`
         queueSize: $queueSize
         urlCode: $urlCode
         hostId: $hostId
+        createdAt: $createdAt
       }
     ) {
       returning {

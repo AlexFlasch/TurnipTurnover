@@ -11,7 +11,7 @@ export default {
   },
   valid: {
     height: 3,
-    backgroundColor: palette.accentLime,
+    backgroundColor: palette.success,
     backgroundImage:
       'linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 75%, transparent 75%, transparent 100%)',
     backgroundSize: '10px 0px',

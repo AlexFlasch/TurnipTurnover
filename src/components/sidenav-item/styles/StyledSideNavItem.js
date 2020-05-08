@@ -34,6 +34,7 @@ export default styled.li`
       white-space: pre;
       line-height: ${palette.scale(2)};
       padding: ${palette.scale(-5)};
+      letter-spacing: -1px;
     }
   }
 `;
